@@ -1,0 +1,271 @@
+{
+    "version": {
+        "schema": "0.1",
+        "android": "Android O"
+    },
+    "product": {
+        "name": "poplar",
+        "device": "poplar",
+        "brand": "poplar",
+        "model": "poplar",
+        "manufacture": "hisilicon",
+        "inherit_products": [
+            "full_base"
+        ]
+    },
+    "boardConfig": {
+        "partition_table": {
+            "flash_block_size": "512",
+            "scheme": "mbr",
+            "partitions": [
+                {
+                    "name": "system",
+                    "type": "ext4",
+                    "size": "1073741312"
+                },
+                {
+                    "name": "userdata",
+                    "type": "ext4",
+                    "size": "5456789504"
+                },
+                {
+                    "name": "cache",
+                    "type": "ext4",
+                    "size": "1073741312"
+                }
+            ]
+        },
+        "target": {
+            "archs": [
+                {
+                    "name": "arm",
+                    "variant": "armv7-a-neon",
+                    "cpu": {
+                        "variant": "cortex-a9",
+                        "abi": "armeabi-v7a",
+                        "abi2": "armeabi"
+                    }
+                }
+            ],
+            "no_recovery": true,
+            "no_radioimage": true,
+            "binder": "64"
+        },
+        "bootloader": {
+            "has_2nd_bootloader": true
+        },
+        "sepolicy": {
+            "dir": "device/hisilicon/poplar/sepolicy"
+        },
+        "board_features": [
+            "android.software.app_widgets.xml",
+            "android.hardware.screen.landscape.xml",
+            "android.hardware.usb.host.xml",
+            "android.software.print.xml",
+            "android.software.webview.xml",
+            "android.hardware.ethernet.xml"
+        ]
+    },
+    "boot_image": {
+        "kernel": {
+            "cmd_line": "androidboot.hardware=poplar androidboot.selinux=permissive mmz=ddr,0,0,60M firmware_class.path=/system/etc/firmware",
+            "local_kernel": "device/hisilicon/poplar-kernel/Image",
+            "local_dtb": "device/hisilicon/poplar-kernel/hi3798cv200-poplar.dtb"
+        },
+        "rootfs_overlay": {
+            "fstab": {
+                "name": "rootfs/fstab.poplar",
+                "mounts": [
+                    {
+                        "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p3",
+                        "dst": "/system",
+                        "type": "ext4",
+                        "mnt_flag": "ro,barrier=1,noatime",
+                        "fs_mgr_flag": "wait"
+                    },
+                    {
+                        "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p5",
+                        "dst": "/cache",
+                        "type": "ext4",
+                        "mnt_flag": "nosuid,nodev,noatime,barrier=1,data=ordered",
+                        "fs_mgr_flag": "wait"
+                    },
+                    {
+                        "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p6",
+                        "dst": "/data",
+                        "type": "ext4",
+                        "mnt_flag": "nosuid,nodev,noatime,barrier=1,data=ordered,noauto_da_alloc",
+                        "fs_mgr_flag": "wait"
+                    },
+                    {
+                        "src": "/devices/platform/soc@f0000000/f9820000.mmc/mmc_host/mmc0/mmc0:0001/block/mmcblk0",
+                        "dst": "auto",
+                        "type": "auto",
+                        "mnt_flag": "defaults",
+                        "fs_mgr_flag": "voldmanaged=sdcard:auto,noemulatedsd"
+                    },
+                    {
+                        "src": "/devices/platform/soc@f0000000/f98a0000.xhci/usb4/4-1/4-1:1.0/host0/target0:0:0/0:0:0:0/block/sda",
+                        "dst": "auto",
+                        "type": "auto",
+                        "mnt_flag": "defaults",
+                        "fs_mgr_flag": "voldmanaged=usb:auto,noemulatedsd"
+                    },
+                    {
+                        "src": "/devices/platform/soc@f0000000/f98a0000.xhci/usb3/3-1/3-1:1.0/host0/target0:0:0/0:0:0:0/block/sda",
+                        "dst": "auto",
+                        "type": "auto",
+                        "mnt_flag": "defaults",
+                        "fs_mgr_flag": "voldmanaged=usb:auto,noemulatedsd"
+                    }
+                ]
+            },
+            "init.rc": [
+                {
+                    "file": "rootfs/init.poplar.rc"
+                },
+                {
+                    "file": "rootfs/init.poplar.usb.rc"
+                }
+            ],
+            "uevent.rc": {
+                "file": "rootfs/ueventd.poplar.rc"
+            }
+        }
+    },
+    "framework_configs": {
+        "properties": [
+            "dalvik.vm.heapstartsize=5m",
+            "dalvik.vm.heapgrowthlimit=96m",
+            "dalvik.vm.heapsize=256m",
+            "dalvik.vm.heaptargetutilization=0.75",
+            "dalvik.vm.heapminfree=512k",
+            "dalvik.vm.heapmaxfree=2m",
+            "ro.sf.lcd_density=160",
+            "ro.opengles.version=196609"
+        ]
+    },
+    "hals": [
+        {
+            "name": "keymaster",
+            "required_packages": {
+                "build": [
+                    "android.hardware.keymaster@3.0-impl",
+                    "android.hardware.keymaster@3.0-service"
+                ]
+            }
+        },
+        {
+            "name": "graphics",
+            "manifests": [
+                {
+                    "name": "android.hardware.graphics.composer",
+                    "format": "hidl",
+                    "transport": {
+                        "mode": "hwbinder"
+                    },
+                    "version": "2.1",
+                    "interface": {
+                        "name": "IComposer",
+                        "instance": "default"
+                    }
+                },
+                {
+                    "name": "android.hardware.graphics.allocator",
+                    "format": "hidl",
+                    "transport": {
+                        "mode": "hwbinder"
+                    },
+                    "version": "2.0",
+                    "interface": {
+                        "name": "IAllocator",
+                        "instance": "default"
+                    }
+                },
+                {
+                    "name": "android.hardware.graphics.mapper",
+                    "format": "hidl",
+                    "transport": {
+                        "arch": "32+64",
+                        "mode": "passthrough"
+                    },
+                    "impl": {
+                        "level": "generic"
+                    },
+                    "version": "2.0",
+                    "interface": {
+                        "name": "IMapper",
+                        "instance": "default"
+                    }
+                }
+            ],
+            "build_configs": [
+                "TARGET_USES_HWC2 := true"
+            ],
+            "required_packages": {
+                "build": [
+                    "libion",
+                    "android.hardware.graphics.mapper@2.0",
+                    "android.hardware.graphics.mapper@2.0-impl",
+                    "android.hardware.graphics.allocator@2.0",
+                    "android.hardware.graphics.allocator@2.0-impl",
+                    "android.hardware.graphics.allocator@2.0-service",
+                    "android.hardware.graphics.composer@2.1",
+                    "android.hardware.graphics.composer@2.1-impl",
+                    "android.hardware.graphics.composer@2.1-service"
+                ]
+            },
+            "raw": [
+                "$(call inherit-product, vendor/hisilicon/poplar/device-graphic.mk)"
+            ]
+        },
+        {
+            "name": "audio",
+            "features": [
+                "android.hardware.audio.output.xml",
+                "android.hardware.audio.low_latency.xml"
+            ],
+            "required_packages": {
+                "build": [
+                    "android.hardware.audio@2.0-impl",
+                    "android.hardware.audio@2.0-service",
+                    "android.hardware.audio.effect@2.0-impl",
+                    "audio.a2dp.default",
+                    "audio.usb.default",
+                    "audio.r_submix.default",
+                    "audio.primary.poplar:v"
+                ]
+            },
+            "runtime_configs": [
+                {
+                    "src": "$(LOCAL_PATH)/audio/audio_policy.conf"
+                }
+            ]
+        },
+        {
+            "name": "media.codec",
+            "runtime_configs": [
+                {
+                    "src": "$(LOCAL_PATH)/media/media_codecs.xml"
+                },
+                {
+                    "src": "frameworks/av/media/libstagefright/data/media_codecs_google_video.xml"
+                },
+                {
+                    "src": "frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml"
+                }
+            ]
+        },
+        {
+            "name": "bluetooth",
+            "build_configs": [
+                "BOARD_HAVE_BLUETOOTH_BCM := true"
+            ]
+        }
+    ],
+    "vendor_raw": {
+        "instructions": [
+            "$(call inherit-product, vendor/hisilicon/poplar/device-vendor.mk)"
+        ]
+    }
+}

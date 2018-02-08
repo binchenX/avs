@@ -1,0 +1,84 @@
+{
+    "name": "wifi",
+    "manifests": [
+        {
+            "name": "android.hardware.wifi",
+            "format": "hidl",
+            "transport": {
+                "mode": "hwbinder"
+            },
+            "impl": {
+                "level": "generic"
+            },
+            "version": "1.0",
+            "interface": {
+                "name": "IWifi",
+                "instance": "default"
+            }
+        },
+        {
+            "name": "android.hardware.wifi.supplicant",
+            "format": "hidl",
+            "transport": {
+                "mode": "hwbinder"
+            },
+            "version": "1.0",
+            "interface": {
+                "name": "ISupplicant",
+                "instance": "default"
+            }
+        }
+    ],
+    "features": [
+        "android.hardware.wifi"
+    ],
+    "build_configs": [
+        "WPA_SUPPLICANT_VERSION := VER_0_8_X",
+        "BOARD_WPA_SUPPLICANT_DRIVER := NL80211",
+        "BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd",
+        "BOARD_HOSTAPD_DRIVER := NL80211",
+        "BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd",
+        "BOARD_WLAN_DEVICE := bcmdhd"
+    ],
+    "packages": {
+        "build": [
+            "android.hardware.wifi@1.0-service",
+            "wificond",
+            "wificond.rc",
+            "libwpa_client",
+            "wpa_supplicant",
+            "hostapd",
+            "wpa_cli",
+            "libwifi-hal"
+        ]
+    },
+    "init.rc": [
+        {
+            "name": "wifi.rc",
+            "destFile": "$(TARGET_COPY_OUT_VENDOR)/etc/init/wifi.rc",
+            "services": [
+                {
+                    "name": "wpa_supplicant",
+                    "path": "/system/vendor/bin/hw/wpa_supplicant",
+                    "args": "-iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -e/data/misc/wifi/entropy.bin  -g@android:wpa_wlan0",
+                    "options": [
+                        "socket wpa_wlan0 dgram 660 wifi wifi",
+                        "class main",
+                        "disabled",
+                        "oneshot"
+                    ]
+                }
+            ]
+        }
+    ],
+    "runtime_configs": [
+        {
+            "src": "$(LOCAL_PATH)/wpa_supplicant.conf",
+            "destDir": "system/etc/wifi"
+        }
+    ],
+    "properties": [
+        "wifi.interface=wlan0",
+        "wifi.supplicant_scan_interval=15"
+    ]
+}

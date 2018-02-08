@@ -1,0 +1,30 @@
+{
+    "name": "bluetooth",
+    "manifests": [
+        {
+            "name": "android.hardware.bluetooth",
+            "format": "hidl",
+            "transport": {
+                "mode": "hwbinder"
+            },
+            "impl": {
+                "level": "generic"
+            },
+            "version": "1.0",
+            "interface": {
+                "name": "IBluetoothHci",
+                "instance": "default"
+            }
+        }
+    ],
+    "features": [
+        "android.hardware.bluetooth.xml",
+        "android.hardware.bluetooth_le.xml"
+    ],
+    "build_configs": [
+        "BOARD_HAVE_BLUETOOTH_BCM := true"
+    ],
+    "required_packages": [],
+    "runtime_configs": [],
+    "property_override": []
+}

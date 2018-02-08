@@ -1,0 +1,286 @@
+{
+    "version": {
+        "schema": "0.1",
+        "android": "Android O"
+    },
+    "product": {
+        "name": "poplar",
+        "device": "poplar",
+        "brand": "poplar",
+        "model": "poplar",
+        "manufacture": "linaro"
+    },
+    "boardConfig": {
+        "flash": {
+            "block_size": "512"
+        },
+        "partition_table": {
+            "scheme": "mbr",
+            "partitions": [
+                {
+                    "name": "system",
+                    "type": "ext4",
+                    "size": "1073741312"
+                },
+                {
+                    "name": "userdata",
+                    "type": "ext4",
+                    "size": "5456789504"
+                },
+                {
+                    "name": "cache",
+                    "type": "ext4",
+                    "size": "1073741312"
+                }
+            ]
+        },
+        "target": {
+            "archs": [
+                {
+                    "name": "arm",
+                    "variant": "armv7-a-neon",
+                    "cpu": {
+                        "variant": "cortex-a9",
+                        "abi": "armeabi-v7a",
+                        "abi2": "armeabi"
+                    }
+                }
+            ],
+            "no_recovery": true,
+            "no_radioimage": true,
+            "binder": "64"
+        },
+        "bootloader": {
+            "has_2nd_bootloader": true
+        },
+        "boot_image": {
+            "args": {
+                "ramkdis_offset": "0x00001",
+                "kernel_offset": "0x00002"
+            },
+            "kernel": {
+                "cmd_line": "androidboot.hardware=poplar androidboot.selinux=permissive mmz=ddr,0,0,60M firmware_class.path=/system/etc/firmware",
+                "local_kernel": "device/hisilicon/poplar-kernel/Image",
+                "local_dtb": "device/hisilicon/poplar-kernel/hi3798cv200-poplar.dtb"
+            },
+            "rootfs_overlay": {
+                "fstab": {
+                    "mounts": [
+                        {
+                            "src": "/dev/block/mmcblk0p3 ",
+                            "dst": "/system",
+                            "type": "ext4",
+                            "mnt_flag": "ro,barrier=1,noatime",
+                            "fs_mgr_flag": "wait"
+                        },
+                        {
+                            "src": "/dev/block/mmcblk0p5",
+                            "dst": "/cache",
+                            "type": "ext4",
+                            "mnt_flag": "nosuid,nodev,noatime,barrier=1,data=ordered",
+                            "fs_mgr_flag": "wait"
+                        }
+                    ]
+                },
+                "initRc": {
+                    "imports": [
+                        "init.usb.rc"
+                    ],
+                    "actions": [
+                        {
+                            "triggers": "boot",
+                            "commands": [
+                                "mount debugfs /sys/kernel/debug /sys/kernel/debug"
+                            ]
+                        },
+                        {
+                            "triggers": "fs",
+                            "commands": [
+                                "mount_all ./fstab",
+                                "swapon_all ./fstab"
+                            ]
+                        }
+                    ]
+                },
+                "uevent.rc": {
+                    "rules": [
+                        {
+                            "node": "/dev/tty",
+                            "mode": "0666",
+                            "uid": "root",
+                            "guid": "root"
+                        },
+                        {
+                            "node": "/sys/devices/virtual/input/input*",
+                            "attr": "enable",
+                            "mode": "0666",
+                            "uid": "root",
+                            "guid": "input"
+                        }
+                    ]
+                }
+            }
+        },
+        "sepolicy": {
+            "dir": "device/hisilicon/poplar/sepolicy"
+        },
+        "raw": [
+            "BOARD_HAVE_BLUETOOTH := true",
+            "BOARD_HAVE_BLUETOOTH_BCM := true",
+            "USE_CAMERA_STUB := true",
+            "USE_OPENGL_RENDERER := true",
+            "ARCH_ARM_HAVE_TLS_REGISTER := true",
+            "BOARD_USES_GENERIC_AUDIO := true"
+        ]
+    },
+    "board_features": [
+        "android.software.app_widgets.xml",
+        "android.hardware.screen.landscape.xml",
+        "android.hardware.usb.host.xml",
+        "android.software.print.xml",
+        "android.software.webview.xml",
+        "android.software.backup.xml",
+        "android.hardware.ethernet.xml"
+    ],
+    "system_settings": [
+        "dalvik.vm.heapstartsize=5m",
+        "dalvik.vm.heapgrowthlimit=96m",
+        "dalvik.vm.heapsize=256m",
+        "dalvik.vm.heaptargetutilization=0.75",
+        "dalvik.vm.heapminfree=512k",
+        "dalvik.vm.heapmaxfree=2m"
+    ],
+    "hals": [
+        {
+            "name": "keymaster",
+            "packages": {
+                "build": [
+                    "android.hardware.keymaster@3.0-impl",
+                    "android.hardware.keymaster@3.0-service"
+                ]
+            }
+        },
+        {
+            "name": "graphic",
+            "packages": {
+                "build": [
+                    "libion",
+                    "android.hardware.graphics.mapper@2.0",
+                    "android.hardware.graphics.mapper@2.0-impl",
+                    "android.hardware.graphics.allocator@2.0",
+                    "android.hardware.graphics.allocator@2.0-impl",
+                    "android.hardware.graphics.allocator@2.0-service",
+                    "android.hardware.graphics.composer@2.1",
+                    "android.hardware.graphics.composer@2.1-impl",
+                    "android.hardware.graphics.composer@2.1-service"
+                ]
+            },
+            "raw": [
+                "$(call inherit-product, vendor/hisilicon/poplar/device-graphic.mk)"
+            ]
+        },
+        {
+            "name": "audio",
+            "features": [
+                "android.hardware.audio.output",
+                "android.hardware.audio.output.low_latency"
+            ],
+            "runtime_configs": [
+                {
+                    "src": "audio_policy.conf",
+                    "destDir": "system/etc"
+                }
+            ],
+            "packages": {
+                "build": [
+                    "android.hardware.audio@2.0-impl",
+                    "android.hardware.audio@2.0-service",
+                    "android.hardware.audio.effect@2.0-impl",
+                    "audio.a2dp.default",
+                    "audio.usb.default",
+                    "audio.r_submix.default",
+                    "audio.primary.poplar:hal"
+                ]
+            }
+        },
+        {
+            "name": "video",
+            "features": [
+                "android.hardware.audio.output",
+                "android.hardware.audio.output.low_latency"
+            ],
+            "packages": {
+                "copy": [
+                    {
+                        "src": "libstagefrighthw.so",
+                        "destDir": "system/vendor/lib",
+                        "tag": "hal, hwvideo"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "wifi",
+            "build_configs": [
+                "WPA_SUPPLICANT_VERSION := VER_0_8_X",
+                "BOARD_WPA_SUPPLICANT_DRIVER := NL80211",
+                "BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd",
+                "BOARD_HOSTAPD_DRIVER := NL80211",
+                "BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd",
+                "BOARD_WLAN_DEVICE := bcmdhd"
+            ],
+            "features": [
+                "android.hardware.wifi"
+            ],
+            "runtime_configs": [
+                {
+                    "src": "wpa_supplicant.conf",
+                    "destDir": "system/etc/wifi"
+                },
+                {
+                    "src": "wpa_supplicant.rc",
+                    "destDir": "system/etc/init"
+                }
+            ],
+            "packages": {
+                "build": [
+                    "android.hardware.wifi@1.0-service",
+                    "wificond",
+                    "wificond.rc",
+                    "libwpa_client",
+                    "wpa_supplicant",
+                    "hostapd",
+                    "wpa_cli",
+                    "libwifi-hal"
+                ]
+            },
+            "property_override": [
+                {
+                    "key": "wifi.interface",
+                    "value": "wlan0"
+                },
+                {
+                    "key": " wifi.supplicant_scan_interval",
+                    "value": "15"
+                }
+            ],
+            "initRc": {
+                "file": "wifi.rc.gen",
+                "destFile": "$(TARGET_COPY_OUT_VENDOR)/etc/init/wifi.rc",
+                "services": [
+                    {
+                        "name": "wpa_supplicant",
+                        "path": "/system/vendor/bin/hw/wpa_supplicant",
+                        "args": "-iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -e/data/misc/wifi/entropy.bin  -g@android:wpa_wlan0",
+                        "options": [
+                            "socket wpa_wlan0 dgram 660 wifi wifi",
+                            "class main",
+                            "disabled",
+                            "oneshot"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

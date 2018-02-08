@@ -1,0 +1,16 @@
+{
+	"version": {
+		"schema": "0.1",
+		"android": "Android o"
+	},
+	"product": {
+		"name": "poplar",
+		"device": "Poplar",
+		"brand": "Poplar",
+		"model": "Poplar",
+		"manufacture": "linaro"
+	},
+	"boardConfig": null,
+	"boot_image": null,
+	"hals": null
+}

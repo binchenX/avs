@@ -1,0 +1,91 @@
+package vdts
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/pierrchen/avs/spec"
+	"github.com/pierrchen/avs/utils"
+)
+
+func validateBootImage(spec *spec.Spec, absDeviceDir string) (err error) {
+	return validateAll(spec, absDeviceDir, []IVal{
+		//validatKernelDTB,
+		validateRootfs,
+		validateParititions,
+	})
+}
+
+func validatKernelDTB(spec *spec.Spec, absDeviceDir string) error {
+	if spec.BootImage.Kernel == nil {
+		return errors.New("must have KernelConfig")
+	}
+
+	if spec.BootImage.Kernel.CmdLine == "" {
+		return errors.New("must have kernel command line")
+	}
+
+	// check if kernel and dtb exsit, just print warning
+	if err := validateCopySrc(spec.BootImage.Kernel.LocalKernel, absDeviceDir); err != nil {
+		fmt.Printf("[avs v] can't find kernel Image %s\n", spec.BootImage.Kernel.LocalKernel)
+	}
+
+	if err := validateCopySrc(spec.BootImage.Kernel.LocalDTB, absDeviceDir); err != nil {
+		fmt.Printf("[avs v] can't find dtb Image %s\n", spec.BootImage.Kernel.LocalDTB)
+	}
+
+	return nil
+}
+
+func validateRootfs(spec *spec.Spec, absDeviceDir string) error {
+	for _, rc := range spec.BootImage.Rootfs.InitRc {
+		if rc.File != "" &&
+			(rc.Name != "" || rc.Actions != nil || rc.Imports != nil || rc.Services != nil) {
+			fmt.Printf("rc.File (%s) is not empty, all other other attribute will be ignored\n", rc.File)
+		}
+
+		rcName := rc.File
+		if rcName == "" {
+			rcName = rc.Name
+		}
+		if rcName == "" {
+			fmt.Printf("[avs v] rc file don't have a name")
+			break
+		}
+		if err := validateCopySrc("$(LOCAL_PATH)/"+rcName, absDeviceDir); err != nil {
+			fmt.Printf("[avs v] can't find rc file %s\n", rcName)
+		}
+	}
+
+	return nil
+}
+
+// - BoardConfig.PartitionTable.Partitions
+// - BootImage.Rootfs.Fstab
+// Must contain at least 3 partitions (system, userdata, cache) and they must be in sync (e.g type)
+func validateParititions(spec *spec.Spec, absDeviceDir string) error {
+
+	P := []string{"system", "userdata", "cache"}
+	M := []string{"system", "data", "cache"}
+
+	var parts []string
+	for _, p := range spec.BoardConfig.PartitionTable.Partitions {
+		parts = append(parts, p.Name)
+	}
+
+	if utils.IncludedIn(P, parts) != true {
+		fmt.Printf("missing partitions table declaration, has only %v, need at least %v\n", parts, P)
+	}
+
+	var mounts []string
+	for _, m := range spec.BootImage.Rootfs.Fstab.Mounts {
+		// remove the leading '/' in Dst
+		mounts = append(mounts, m.Dst[1:])
+	}
+
+	if utils.IncludedIn(M, mounts) != true {
+		fmt.Printf("missing partitions in fstab, has only %v, need at least %v\n", mounts, M)
+	}
+
+	return nil
+}
