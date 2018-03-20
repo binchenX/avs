@@ -133,6 +133,8 @@ func ValdiateDeviceConfig(absGenDir string) (err error) {
 
 	pass := true
 
+	spec = override(spec, absGenDir)
+
 	if err = vdts.ValdiateSpec(spec, absGenDir); err != nil {
 		pass = false
 	}
