@@ -38,9 +38,13 @@ type Product struct {
 // particular HAL should be put into HAL.BuildConfigs.
 type BoardConfig struct {
 	PartitionTable PartitionTable `json:"partition_table"`
-	Target         *Target        `json:"target"`
-	Bootloader     *Bootloader    `json:"bootloader,omitempty"`
-	SEPolicy       *SEPolicy      `json:"sepolicy,omitempty"`
+	// A/BUpdate Config
+	// https://source.android.com/devices/tech/ota/ab_updates#build-variables
+	// VerifiedBoot Config
+	// https://android.googlesource.com/platform/external/avb/+show/master/README.md
+	Target     *Target     `json:"target"`
+	Bootloader *Bootloader `json:"bootloader,omitempty"`
+	SEPolicy   *SEPolicy   `json:"sepolicy,omitempty"`
 	// BoardFeatures are the features that require no HAL support. Such as software features
 	// implemented by frameworks (e.g android.software.webview), or features directly supported by
 	// kernel (e.g android.hardware.usb.host.xml).
