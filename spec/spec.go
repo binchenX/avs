@@ -122,7 +122,9 @@ type SEPolicy struct {
 type Kernel struct {
 	CmdLine     string `json:"cmd_line"`
 	LocalKernel string `json:"local_kernel"`
-	LocalDTB    string `json:"local_dtb,omitempty"`
+	// TODO:TARGET_COMPRESSED_KERNEL=true
+	Compressed string `json:"compressed,omitempty"`
+	LocalDTB   string `json:"local_dtb,omitempty"`
 }
 
 // RootfsOverlay includes the files that will be included in the rootfs (part of the boot image).
