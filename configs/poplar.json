@@ -261,6 +261,19 @@
             "build_configs": [
                 "BOARD_HAVE_BLUETOOTH_BCM := true"
             ]
+        },
+        {
+            "name": "drm",
+            "required_packages": {
+                "build": [
+                    "android.hardware.drm@1.0-impl"
+                ]
+            },
+            "raw": [
+                "ifeq ($(TARGET_TEE_IS_OPTEE), true)",
+                "   $(call inherit-product-if-exists, device/hisilicon/poplar/optee-packages.mk)",
+                "endif"
+            ]
         }
     ],
     "vendor_raw": {
