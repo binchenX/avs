@@ -37,6 +37,25 @@ func main() {
 				return nil
 			},
 		},
+
+		{
+			Name:    "kernel",
+			Aliases: []string{"r"},
+			Usage:   "regerate the device config",
+			Flags: []cli.Flag{
+				cli.StringFlag{Name: "image", Value: "", Usage: "kernel image file"},
+			},
+			Action: func(c *cli.Context) error {
+				r := images.Kernel{ImagePath: c.String("image")}
+				v, err := r.Version()
+				if err != nil {
+					log.Fatalln(err)
+				}
+
+				fmt.Println(v)
+				return nil
+			},
+		},
 	}
 
 	app.Run(os.Args)
