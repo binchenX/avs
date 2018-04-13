@@ -80,7 +80,7 @@ func enrichTemplateSpec(spec *spec.Spec, vendor, device string) {
 	spec.Product.Manufacture = vendor
 	spec.BootImage.Kernel.LocalKernel = filepath.Join("device", vendor, kernelDir, kernelImage)
 	spec.BootImage.Kernel.LocalDTB = filepath.Join("device", vendor, kernelDir, dtbImage)
-	spec.BoardConfig.SEPolicy.Dir = filepath.Join("device", vendor, device, "sepolicy")
+	spec.BoardConfig.SELinux.PolicyDir = filepath.Join("device", vendor, device, "sepolicy")
 }
 
 func generateAll(spec *spec.Spec, genDir string) error {

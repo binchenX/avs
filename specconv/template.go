@@ -156,6 +156,15 @@ func UserImageExt4(boardConfig *spec.BoardConfig) bool {
 func FullCmdLine(spec *spec.Spec) string {
 	var s string
 	s += "androidboot.hardware=" + spec.Product.Device + " "
+
+	selinuxMode := spec.BoardConfig.SELinux.Mode
+
+	// default to enforcing
+	if selinuxMode == "" {
+		selinuxMode = "enforcing"
+	}
+
+	s += "androidboot.selinux=" + selinuxMode + " "
 	s += spec.BootImage.Kernel.CmdLine
 	return s
 }

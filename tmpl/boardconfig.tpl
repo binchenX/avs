@@ -68,7 +68,7 @@ BOARD_KERNEL_CMDLINE := {{ $spec | FullCmdLine}}
 {{end }}
 
 #sepolicy
-BOARD_SEPOLICY_DIRS := {{ .BoardConfig.SEPolicy.Dir }}
+BOARD_SEPOLICY_DIRS := {{ .BoardConfig.SELinux.PolicyDir }}
 
 # HAL's build config
 {{- range .Hals }}

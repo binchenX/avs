@@ -44,7 +44,7 @@ type BoardConfig struct {
 	// https://android.googlesource.com/platform/external/avb/+show/master/README.md
 	Target     *Target     `json:"target"`
 	Bootloader *Bootloader `json:"bootloader,omitempty"`
-	SEPolicy   *SEPolicy   `json:"sepolicy,omitempty"`
+	SELinux    *SELinux    `json:"selinux,omitempty"`
 	// BoardFeatures are the features that require no HAL support. Such as software features
 	// implemented by frameworks (e.g android.software.webview), or features directly supported by
 	// kernel (e.g android.hardware.usb.host.xml).
@@ -116,9 +116,10 @@ type MkBootImageArgs struct {
 // Kernel includes the kernel command line, and where to look for the kernel image and DTB.
 type Kernel struct {
 	// Kernel command line need only include product specific stuff
-	// following stuff will be automatically be added
-	// androidboot.hardware=${Product.name}
-	// androidboot.selinux=${SElinux.Mode}
+	// Following configs will be automatically be added
+	// androidboot.hardware=${spec.Product.Device}
+	// androidboot.selinux=${spec.BoardConfig.SELinux.Mode}
+	// see template.go/FullCmdLine
 	CmdLine     string `json:"cmd_line"`
 	LocalKernel string `json:"local_kernel"`
 	// TODO:TARGET_COMPRESSED_KERNEL=true
