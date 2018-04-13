@@ -10,12 +10,6 @@ const (
 	SElinuxModeEnforcing = "enforcing"
 )
 
-// SEPolicy is the sepolicy config.
-// TODO: move to SELinux
-type SEPolicy struct {
-	Dir string `json:"dir"`
-}
-
 // SELinux setting
 type SELinux struct {
 	// Themde set here will override the kernel commandline and default is SElinuxModeEnforcing
