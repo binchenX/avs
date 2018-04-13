@@ -79,3 +79,18 @@ BOARD_SEPOLICY_DIRS := {{ .BoardConfig.SELinux.PolicyDir }}
 {{- end }}
 {{- end}}
 {{- end}}
+
+
+{{- if $spec.BootImage.Args}}
+# MKBootImageArgs
+{{ with $spec.BootImage.Args}}
+{{- if .PageSize}}
+BOARD_KERNEL_PAGESIZE = {{.PageSize}}
+{{- end}}
+
+{{- if .Lda}}
+BOARD_MKBOOTIMG_ARGS = --base {{.Lda.LoadBase}} --kernel_offset {{.Lda.KernelOffset}} --ramdisk_offset {{.Lda.RamdiskOffset}}
+{{- end}}
+
+{{- end}}
+{{- end}}

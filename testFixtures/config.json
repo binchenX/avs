@@ -69,8 +69,7 @@
     },
     "boot_image": {
         "args": {
-            "ramkdis_offset": "0x00001",
-            "kernel_offset": "0x00002"
+            "page_size": "2048"
         },
         "kernel": {
             "cmd_line": "androidboot.hardware=poplar androidboot.selinux=permissive mmz=ddr,0,0,60M firmware_class.path=/system/etc/firmware",

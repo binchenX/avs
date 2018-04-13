@@ -13,6 +13,7 @@ func validateBootImage(spec *spec.Spec, absDeviceDir string) (err error) {
 		//validatKernelDTB,
 		validateRootfs,
 		validateParititions,
+		validateMkBootImgArgs,
 	})
 }
 
@@ -85,6 +86,20 @@ func validateParititions(spec *spec.Spec, absDeviceDir string) error {
 
 	if utils.IncludedIn(M, mounts) != true {
 		fmt.Printf("missing partitions in fstab, has only %v, need at least %v\n", mounts, M)
+	}
+
+	return nil
+}
+
+func validateMkBootImgArgs(spec *spec.Spec, absDeviceDir string) error {
+	args := spec.BootImage.Args
+	if args != nil && args.Lda != nil {
+		lda := args.Lda
+		if !((lda.LoadBase != "" && lda.KernelOffset != "" && lda.RamdiskOffset != "") ||
+			(lda.LoadBase == "" && lda.KernelOffset == "" && lda.RamdiskOffset == " ")) {
+			return fmt.Errorf("MkBootImageLoadArgsLoadAddress should either all default or has value")
+		}
+		return nil
 	}
 
 	return nil

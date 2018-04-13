@@ -107,10 +107,22 @@ type BootImage struct {
 	Rootfs *RootfsOverlay   `json:"rootfs_overlay"`
 }
 
-// MkBootImageArgs is the args passing to mkbootimage scripts when creating the boot image.
+// MkBootImageArgs provides the *part* of the args passing to mkbootimage
+// scripts to creating the boot image.
 type MkBootImageArgs struct {
-	RamdiskOffset string `json:"ramkdis_offset,omitempty"`
-	KernelOffset  string `json:"kernel_offset,omitempty"`
+	// BOARD_KERNEL_PAGESIZE, default to 2048
+	PageSize string                          `json:"page_size,omitempty"`
+	Lda      *MkBootImageLoadArgsLoadAddress `json:"load_addresses,omitempty"`
+}
+
+// MkBootImageLoadArgsLoadAddress is the load address parmaters
+// Must all have explict value
+type MkBootImageLoadArgsLoadAddress struct {
+	LoadBase string `json:"load_base"`
+	// default to 0x8000
+	RamdiskOffset string `json:"ramkdisk_offset"`
+	// default to 0x1000000
+	KernelOffset string `json:"kernel_offset`
 }
 
 // Kernel includes the kernel command line, and where to look for the kernel image and DTB.
