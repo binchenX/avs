@@ -115,6 +115,10 @@ type MkBootImageArgs struct {
 
 // Kernel includes the kernel command line, and where to look for the kernel image and DTB.
 type Kernel struct {
+	// Kernel command line need only include product specific stuff
+	// following stuff will be automatically be added
+	// androidboot.hardware=${Product.name}
+	// androidboot.selinux=${SElinux.Mode}
 	CmdLine     string `json:"cmd_line"`
 	LocalKernel string `json:"local_kernel"`
 	// TODO:TARGET_COMPRESSED_KERNEL=true

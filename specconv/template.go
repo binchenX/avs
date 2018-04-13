@@ -152,6 +152,14 @@ func UserImageExt4(boardConfig *spec.BoardConfig) bool {
 	return false
 }
 
+// FullCmdLine return the full kernel command line
+func FullCmdLine(spec *spec.Spec) string {
+	var s string
+	s += "androidboot.hardware=" + spec.Product.Device + " "
+	s += spec.BootImage.Kernel.CmdLine
+	return s
+}
+
 // f - generated output file
 // templateFile - template
 // spec - spec
@@ -170,6 +178,7 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"getFstabCopySrc":           getFstabCopySrc,
 		"RuntimeConfigInstructions": RuntimeConfigInstructions,
 		"UserImageExt4":             UserImageExt4,
+		"FullCmdLine":               FullCmdLine,
 	}
 	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
 
