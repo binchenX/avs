@@ -3,6 +3,8 @@ package vdts
 import (
 	"errors"
 	"fmt"
+	"reflect"
+	"sort"
 
 	"github.com/pierrchen/avs/spec"
 	"github.com/pierrchen/avs/utils"
@@ -67,7 +69,6 @@ func validateRootfs(spec *spec.Spec, absDeviceDir string) error {
 func validateParititions(spec *spec.Spec, absDeviceDir string) error {
 
 	P := []string{"system", "userdata", "cache"}
-	M := []string{"system", "data", "cache"}
 
 	var parts []string
 	for _, p := range spec.BoardConfig.PartitionTable.Partitions {
@@ -80,12 +81,30 @@ func validateParititions(spec *spec.Spec, absDeviceDir string) error {
 
 	var mounts []string
 	for _, m := range spec.BootImage.Rootfs.Fstab.Mounts {
-		// remove the leading '/' in Dst
-		mounts = append(mounts, m.Dst[1:])
+
+		// ignore the "auto", which are managed by volume managers
+		// usually for usb and sdcard
+		if m.Dst != "auto" {
+			// remove the leading '/' in Dst
+			p := m.Dst[1:]
+			// same partition
+			if p == "data" {
+				p = "userdata"
+			}
+			mounts = append(mounts, p)
+		}
 	}
 
-	if utils.IncludedIn(M, mounts) != true {
-		fmt.Printf("missing partitions in fstab, has only %v, need at least %v\n", mounts, M)
+	if utils.IncludedIn(P, mounts) != true {
+		fmt.Printf("missing partitions in fstab, has only %v, need at least %v\n", mounts, P)
+	}
+
+	// very partition in the partition table must have correspoinding entry in fstab
+	sort.Strings(parts)
+	sort.Strings(mounts)
+
+	if !reflect.DeepEqual(parts, mounts) {
+		fmt.Printf("partitoins %v and mounts %s doesn't match.\n", parts, mounts)
 	}
 
 	return nil
