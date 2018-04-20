@@ -214,11 +214,31 @@
                     "android.hardware.graphics.composer@2.1",
                     "android.hardware.graphics.composer@2.1-impl",
                     "android.hardware.graphics.composer@2.1-service"
+                ],
+                "copy": [
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libGLES_mali.so",
+                        "destDir": "lib/egl"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/hwcomposer.poplar.so",
+                        "destDir": "lib/hw"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhi_gfx2d.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/liboverlay.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/gralloc.poplar.so",
+                        "destDir": "lib/hw"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libion_ext.so"
+                    }
                 ]
-            },
-            "raw": [
-                "$(call inherit-product, vendor/hisilicon/poplar/device-graphic.mk)"
-            ]
+            }
         },
         {
             "name": "audio",
@@ -255,7 +275,41 @@
                 {
                     "src": "frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml"
                 }
-            ]
+            ],
+            "required_packages": {
+                "copy": [
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libstagefrighthw.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhi_common.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhi_msp.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhi_vfmw.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libOMX_Core.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libOMX.hisi.video.decoder.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhiavplayer.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhiavplayer_adp.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/libhiavplayerservice.so"
+                    },
+                    {
+                        "src": "vendor/hisilicon/poplar/proprietary/hiavplayer"
+                    }
+                ]
+            }
         },
         {
             "name": "bluetooth",
@@ -276,10 +330,5 @@
                 "endif"
             ]
         }
-    ],
-    "vendor_raw": {
-        "instructions": [
-            "$(call inherit-product, vendor/hisilicon/poplar/device-vendor.mk)"
-        ]
-    }
+    ]
 }
