@@ -57,10 +57,30 @@ type Packages struct {
 	Copy []CopyPackage `json:"copy,omitempty"`
 }
 
-// CopyPackage is the package that will be copied directly.
+// CopyPackage is the libary and executable that will be copied directly.
+// The sole purpose for its existence is to deal with vendor propriety binary
+// that has no source code.
+//	 Src: the package to be copied, must be a file (not directory)
+// 	 the path is either relative to $(ANDROID_BUILD_TOP) or the device directory.
+//   The first is for the cases when vendor want to release the binary as a separate package
+//   which bundles a click through license, e.g Mali gles.
+//   The second is for the cases when pacakges reside in the device directory but with a EULA,
+//   e.g bt firmware.
+// DestDir: The copy destination directory. It is optional, and when no dir specified,
+// following rules apply:
+// 1. all .so will be copied to $(vendor)/lib;
+// 2. all executable will be copied to $(vendor)/bin
+// If specified, the DestDir is *relative* to the $(vendor_out) eg. hw, /lib/egl
+// and with no ending "/".
+// The exactly dest dir for $(vendor) depend on the partition configrations, if no dedicated vendor
+// partition, it will copy to $OUT/system/vendor; if yes, it will copy to $OUT/vendor. This is taking
+// care of by avs automatically.
+// 	Tag: reserved.
+// The the copy command will be equivlenat to
+// cp Src DestDir/basename(Src)
 type CopyPackage struct {
 	Src     string `json:"src"`
-	DestDir string `json:"destDir"`
+	DestDir string `json:"destDir,omitempty"`
 	Tag     string `json:"tag,omitempty"`
 }
 

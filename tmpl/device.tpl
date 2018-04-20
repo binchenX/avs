@@ -60,7 +60,7 @@ PRODUCT_PACKAGES += \
 ## copy packages
 PRODUCT_COPY_FILES += \
 {{- range .Copy }}
-    {{.Src | ProductCopySrcPath}}:{{.DestDir}}/{{.Src}} \
+    {{ . | CopyInstruction }} \
 {{- end}}
 {{- end}}
 

@@ -57,6 +57,11 @@ func getFeatureFileDestDir() string {
 	return "system/etc/permissions"
 }
 
+func getVendorOut() string {
+	return "system/vendor"
+}
+
+// CopyPackage.Src
 // Always return a relative path that is relative to $(ANDROID_BUILD_TOP)
 // Default use "$(LOCAL_PATH)" means it is relative to the device config dir
 // For framework/**, use it directly
@@ -64,13 +69,19 @@ func getFeatureFileDestDir() string {
 // 1. for feature files, it will always in framework
 // 2. for binary copy it must be in vendor/xx
 // 3. for rc file it should be in device config dir, i.e LOCAL_PATH
-func getProductCopySrcPath(base string) string {
-	return base
-}
+func getCopyInstruction(cp spec.CopyPackage) string {
+	var dst string
+	if cp.DestDir == "" {
+		if strings.HasSuffix(cp.Src, ".so") {
+			dst = getVendorOut() + "/lib"
+		} else {
+			dst = getVendorOut() + "/bin"
+		}
+	} else {
+		dst = getVendorOut() + "/" + cp.DestDir
+	}
 
-// Not used atm, it should be specified in the config.json directly
-func getProductCopyDestPath(base string) string {
-	return base
+	return cp.Src + ":" + dst + "/" + filepath.Base(cp.Src)
 }
 
 func getInheritProductMkDir(product string) string {
@@ -177,8 +188,7 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"ToUpper":                   strings.ToUpper,
 		"FeatureFileSrcDir":         getFeatureFileSrcDir,
 		"FeatureFileDestDir":        getFeatureFileDestDir,
-		"ProductCopySrcPath":        getProductCopySrcPath,
-		"ProductCopyDestPath":       getProductCopyDestPath,
+		"CopyInstruction":           getCopyInstruction,
 		"InheritProduct":            getInheritProductMkDir,
 		"getGenFileName":            getGenFileName,
 		"removeTag":                 removePackageTag,
