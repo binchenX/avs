@@ -21,7 +21,12 @@
                 {
                     "name": "system",
                     "type": "ext4",
-                    "size": "1073741312"
+                    "size": "864026112"
+                },
+                {
+                    "name": "vendor",
+                    "type": "ext4",
+                    "size": "209714688"
                 },
                 {
                     "name": "userdata",
@@ -86,13 +91,20 @@
                     },
                     {
                         "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p5",
+                        "dst": "/vendor",
+                        "type": "ext4",
+                        "mnt_flag": "ro,barrier=1,noatime",
+                        "fs_mgr_flag": "wait"
+                    },
+                    {
+                        "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p6",
                         "dst": "/cache",
                         "type": "ext4",
                         "mnt_flag": "nosuid,nodev,noatime,barrier=1,data=ordered",
                         "fs_mgr_flag": "wait"
                     },
                     {
-                        "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p6",
+                        "src": "/dev/block/platform/soc@f0000000/f9830000.mmc/by-num/p7",
                         "dst": "/data",
                         "type": "ext4",
                         "mnt_flag": "nosuid,nodev,noatime,barrier=1,data=ordered,noauto_da_alloc",
