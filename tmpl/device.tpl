@@ -99,7 +99,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # manifest.xml
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/{{"manifest.xml"}}:system/vendor/manifest.xml
+    $(LOCAL_PATH)/{{"manifest.xml"}}:${TARGET_COPY_OUT_VENDOR}/manifest.xml
 
 {{if .VendorRaw}}
 # vendor raw instructions - does it has a better place to go?

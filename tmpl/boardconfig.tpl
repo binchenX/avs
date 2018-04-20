@@ -94,3 +94,5 @@ BOARD_MKBOOTIMG_ARGS = --base {{.Lda.LoadBase}} --kernel_offset {{.Lda.KernelOff
 
 {{- end}}
 {{- end}}
+
+TARGET_COPY_OUT_VENDOR := {{ .BoardConfig.PartitionTable | getVendorOut }}

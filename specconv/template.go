@@ -57,8 +57,21 @@ func getFeatureFileDestDir() string {
 	return "system/etc/permissions"
 }
 
-func getVendorOut() string {
-	return "system/vendor"
+func hasVendorPartition(pt *spec.PartitionTable) bool {
+	for _, p := range pt.Partitions {
+		if p.Name == "vendor" {
+			return true
+		}
+	}
+	return false
+}
+
+func getVendorOut(pt *spec.PartitionTable) string {
+	if hasVendorPartition(pt) {
+		return "vendor"
+	} else {
+		return "system/vendor"
+	}
 }
 
 // CopyPackage.Src
@@ -73,12 +86,12 @@ func getCopyInstruction(cp spec.CopyPackage) string {
 	var dst string
 	if cp.DestDir == "" {
 		if strings.HasSuffix(cp.Src, ".so") {
-			dst = getVendorOut() + "/lib"
+			dst = "$(TARGET_COPY_OUT_VENDOR)" + "/lib"
 		} else {
-			dst = getVendorOut() + "/bin"
+			dst = "$(TARGET_COPY_OUT_VENDOR)" + "/bin"
 		}
 	} else {
-		dst = getVendorOut() + "/" + cp.DestDir
+		dst = "$(TARGET_COPY_OUT_VENDOR)" + "/" + cp.DestDir
 	}
 
 	return cp.Src + ":" + dst + "/" + filepath.Base(cp.Src)
@@ -198,6 +211,7 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"RuntimeConfigInstructions": RuntimeConfigInstructions,
 		"UserImageExt4":             UserImageExt4,
 		"FullCmdLine":               FullCmdLine,
+		"getVendorOut":              getVendorOut,
 	}
 	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
 
