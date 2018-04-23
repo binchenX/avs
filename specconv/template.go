@@ -130,7 +130,7 @@ func getInitRcCopyStatement(rcs []spec.RcScripts) string {
 		}
 
 		filepath.Base(name)
-		t := `    $(LOCAL_PATH)/` + name + ":" + rcInstallDest(&rc) + filepath.Base(name) + ` \`
+		t := `$(LOCAL_PATH)/` + name + ":" + rcInstallDest(&rc) + filepath.Base(name) + ` \`
 		s = append(s, t)
 	}
 

@@ -5,7 +5,7 @@ import {{.}}
 {{- range .Actions }}
 on {{.Triggers}}
     {{- range .Commands}}
-        {{.}}
+    {{.}}
     {{- end}}
 {{- end}}
 
