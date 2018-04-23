@@ -63,6 +63,12 @@
             "mode": "permissive",
             "policyDir": "device/hisilicon/poplar/sepolicy"
         },
+        "usb_gadget": {
+            "serialnumber": "0123456789POPLAR",
+            "manufacturer": "HISILICON",
+            "product": "ADB Gadget",
+            "controller": "f98c0000.usb"
+        },
         "board_features": [
             "android.software.app_widgets.xml",
             "android.hardware.screen.landscape.xml",
@@ -136,9 +142,6 @@
             "init.rc": [
                 {
                     "file": "rootfs/init.poplar.rc"
-                },
-                {
-                    "file": "rootfs/init.poplar.usb.rc"
                 }
             ],
             "uevent.rc": {

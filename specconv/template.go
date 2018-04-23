@@ -39,13 +39,19 @@ func addProductSpecificFileMapping(spec *spec.Spec) {
 		tmlMap[ueventRc] = "uevent.tpl"
 	}
 
-	// fstab
+	// fstab.hw
 	fs := spec.BootImage.Rootfs.Fstab
 	fileName := "fstab." + spec.Product.Name
 	if fs.Name != "" {
 		fileName = fs.Name
 	}
 	tmlMap[fileName] = "fstab.tpl"
+
+	// init.hw.usb.rc
+	if spec.BoardConfig.USBGadget != nil {
+		usbRcFile := fmt.Sprintf("rootfs/init.%s.usb.rc", spec.Product.Name)
+		tmlMap[usbRcFile] = "usb.tpl"
+	}
 }
 
 // hardcoded by Android framework and used the Android Device configure files

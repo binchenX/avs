@@ -106,6 +106,7 @@ func generateAll(spec *spec.Spec, genDir string) error {
 func generateRcScripts(s *spec.Spec, genDir string) error {
 
 	var scripts []spec.RcScripts
+
 	// scripts from rootfs
 	scripts = append(scripts, s.BootImage.Rootfs.InitRc...)
 	// scripts from hal

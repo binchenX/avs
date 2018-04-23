@@ -45,6 +45,8 @@ type BoardConfig struct {
 	Target     *Target     `json:"target"`
 	Bootloader *Bootloader `json:"bootloader,omitempty"`
 	SELinux    *SELinux    `json:"selinux,omitempty"`
+	// usb adb configuration
+	USBGadget *USBGadget `json:"usb_gadget,omitempty"`
 	// BoardFeatures are the features that require no HAL support. Such as software features
 	// implemented by frameworks (e.g android.software.webview), or features directly supported by
 	// kernel (e.g android.hardware.usb.host.xml).
@@ -182,4 +184,12 @@ type FrameworkConfigs struct {
 // Use it *rarely*.
 type VendorRaw struct {
 	Instructions []string `json:"instructions"`
+}
+
+// USBGadget is the adb config for usb
+type USBGadget struct {
+	Serialnumber string `json:"serialnumber"`
+	Manufacturer string `json:"manufacturer"`
+	Product      string `json:"product"`
+	Controller   string `json:"controller"`
 }

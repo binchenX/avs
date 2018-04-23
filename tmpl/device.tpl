@@ -15,7 +15,10 @@ PRODUCT_COPY_FILES += \
     {{ .BootImage.Rootfs.Fstab    | getFstabCopySrc}}:root/fstab.{{- .Product.Name}}
 
 PRODUCT_COPY_FILES += \
-{{ .BootImage.Rootfs.InitRc | getInitRcCopyStatement}}
+    {{ .BootImage.Rootfs.InitRc | getInitRcCopyStatement}}
+{{- if .BoardConfig.USBGadget}}
+    $(LOCAL_PATH)/rootfs/init.{{.Product.Name}}.usb.rc:root/init.{{.Product.Name}}.usb.rc \
+{{- end}}
 
 {{if .BoardConfig.BoardFeatures}}
 # feature declaration
