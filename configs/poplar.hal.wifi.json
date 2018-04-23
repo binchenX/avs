@@ -46,10 +46,16 @@
             "wificond",
             "wificond.rc",
             "libwpa_client",
-            "wpa_supplicant",
             "hostapd",
-            "wpa_cli",
-            "libwifi-hal"
+            "wpa_cli"
+        ],
+        "copy": [
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/libwifi-hal.so"
+            },
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/wpa_supplicant"
+            }
         ]
     },
     "init.rc": [
@@ -66,6 +72,14 @@
                         "class main",
                         "disabled",
                         "oneshot"
+                    ]
+                }
+            ],
+            "actions": [
+                {
+                    "triggers": "boot",
+                    "commands": [
+                        "insmod /vendor/lib/modules/btmtk_usb.ko"
                     ]
                 }
             ]
