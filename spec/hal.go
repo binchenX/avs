@@ -22,6 +22,8 @@ type HAL struct {
 	// It can be empty, since the required package maybe included in the base product config,
 	// as specified in the Spec.Product.
 	Packages *Packages `json:"required_packages,omitempty"`
+	// Firmwares are the firmware required.
+	Firmwares *Firmwares `json:"firmwares,omitempty"`
 	// RawInstructions are the instructions that aren't modeled at the moment and will be copied
 	// directly to the device.mk.
 	RawInstructions []string `json:"raw,omitempty"`
@@ -96,3 +98,8 @@ type Property struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
+
+// Firmwares are the firmwares required for this feature for function properly.
+// Each string is the source firmware to copy from, the copy destination is fixed
+// see getFirmwareLocation()
+type Firmwares []string

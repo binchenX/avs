@@ -202,6 +202,12 @@ func getFullKernelCommand(spec *spec.Spec) string {
 	return strings.Join(s, " ")
 }
 
+// InstsallFirmware is the instruction to install firmware on target
+func InstsallFirmware(src string) string {
+	// FIXME: always use /vendor/firmware now
+	return src + ":" + "/vendor/firmware/" + filepath.Base(src)
+}
+
 // f - generated output file
 // templateFile - template
 // spec - spec
@@ -221,6 +227,7 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"UserImageExt4":             UserImageExt4,
 		"getFullKernelCommand":      getFullKernelCommand,
 		"getVendorOut":              getVendorOut,
+		"InstsallFirmware":          InstsallFirmware,
 	}
 	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
 

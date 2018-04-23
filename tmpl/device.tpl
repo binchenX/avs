@@ -66,6 +66,14 @@ PRODUCT_COPY_FILES += \
 
 {{- end -}} {{/**Packages**/}}
 
+{{- if .Firmwares}}
+## firmwares
+PRODUCT_COPY_FILES += \
+{{- range .Firmwares }}
+    {{ . | InstsallFirmware }} \
+{{- end}}
+{{- end}}
+
 {{- if .RawInstructions}}
 # raw instructions - do I have a better place to go?
 {{- range .RawInstructions}}
