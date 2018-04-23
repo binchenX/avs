@@ -176,30 +176,30 @@ func UserImageExt4(boardConfig *spec.BoardConfig) bool {
 	return false
 }
 
+func getFirmwareLocation(spec *spec.Spec) string {
+	if hasVendorPartition(&spec.BoardConfig.PartitionTable) {
+		return "/vendor/firmware"
+	}
+	return "/system/etc/firmware"
+}
+
 // getFullKernelCommand return the full kernel command line
 func getFullKernelCommand(spec *spec.Spec) string {
-	var s string
+	var s []string
 
 	// 1. androidboot.xxx
-	s += "androidboot.hardware=" + spec.Product.Device + " "
+	s = append(s, "androidboot.hardware="+spec.Product.Device)
 	selinuxMode := spec.BoardConfig.SELinux.Mode
-
 	// default to enforcing
 	if selinuxMode == "" {
 		selinuxMode = "enforcing"
 	}
-	s += "androidboot.selinux=" + selinuxMode + " "
-
+	s = append(s, "androidboot.selinux="+selinuxMode)
 	// 2. stanard kernel cmdline
-	if hasVendorPartition(&spec.BoardConfig.PartitionTable) {
-		s += "firmware_class.path=/vendor/firmware" + " "
-	} else {
-		s += "firmware_class.path=/system/etc/firmware" + " "
-	}
-
+	s = append(s, "firmware_class.path="+getFirmwareLocation(spec))
 	// 3. vendor specific kernel cmdline
-	s += spec.BootImage.Kernel.CmdLine
-	return s
+	s = append(s, spec.BootImage.Kernel.CmdLine)
+	return strings.Join(s, " ")
 }
 
 // f - generated output file
