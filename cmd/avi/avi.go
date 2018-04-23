@@ -43,6 +43,7 @@ func main() {
 			Aliases: []string{"r"},
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "image", Value: "", Usage: "kernel image file"},
+				cli.BoolFlag{Name: "configs"},
 			},
 			Action: func(c *cli.Context) error {
 				r := images.Kernel{ImagePath: c.String("image")}
@@ -71,6 +72,16 @@ func main() {
 
 				} else {
 					fmt.Println("Pure and simple kernel image")
+				}
+
+				// dump kernel build configs
+				if c.Bool("configs") {
+					configs, err := r.Configs()
+					if err != nil {
+						fmt.Println(configs)
+					} else {
+						fmt.Println(configs)
+					}
 				}
 				return nil
 			},
