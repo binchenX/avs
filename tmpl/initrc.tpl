@@ -2,17 +2,17 @@
 import {{.}}
 {{- end}}
 
-{{range .Actions }}
+{{- range .Actions }}
 on {{.Triggers}}
     {{- range .Commands}}
         {{.}}
     {{- end}}
-{{end}}
+{{- end}}
 
 
-{{range .Services}}
+{{- range .Services}}
 service {{.Name}} {{.Path}} {{.Args}}
    {{- range .Options}}
     {{.}}
    {{- end }}
-{{end }}
+{{- end }}
