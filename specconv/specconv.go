@@ -103,22 +103,32 @@ func generateAll(spec *spec.Spec, genDir string) error {
 	return nil
 }
 
-func generateRcScripts(spec *spec.Spec, genDir string) error {
-	for _, rc := range spec.BootImage.Rootfs.InitRc {
-		// use rc.File directly, don't generate
-		if rc.File != "" {
-			break
-		}
+func generateRcScripts(s *spec.Spec, genDir string) error {
 
-		path := filepath.Join(genDir, rc.Name)
-		outFile, err := os.Create(path)
-		if err != nil {
-			log.Printf("faild to create %s", path)
-			return err
+	var scripts []spec.RcScripts
+	// scripts from rootfs
+	scripts = append(scripts, s.BootImage.Rootfs.InitRc...)
+	// scripts from hal
+	for _, hal := range s.Hals {
+		if hal.InitRc != nil {
+			scripts = append(scripts, hal.InitRc...)
 		}
-		defer outFile.Close()
-		executeTemplateForRc(outFile, &rc)
-		avsstate.GenereatedFiles = append(avsstate.GenereatedFiles, outFile.Name())
+	}
+
+	for _, rc := range scripts {
+		// use rc.File directly, don't generate
+		// TODO: add validator
+		if rc.File == "" && rc.Name != "" {
+			path := filepath.Join(genDir, rc.Name)
+			outFile, err := os.Create(path)
+			if err != nil {
+				log.Printf("faild to create %s", path)
+				return err
+			}
+			defer outFile.Close()
+			executeTemplateForRc(outFile, &rc)
+			avsstate.GenereatedFiles = append(avsstate.GenereatedFiles, outFile.Name())
+		}
 	}
 	return nil
 }
