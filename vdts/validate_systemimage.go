@@ -19,7 +19,44 @@ func ValidateSystemImage(spec *spec.Spec, genDir string) error {
 		validateHalRuntimeConfigs,
 		//validateHalPackagesBuild,
 		validateHalPackagesCopy,
+		validateHalInitRc,
 	})
+}
+
+// validateHalInitRc validate the hal initrc
+func validateHalInitRc(s *spec.Spec, genDir string) error {
+	// pre-generation validation
+
+	var rcs []spec.RcScripts
+
+	for _, hal := range s.Hals {
+		if hal.InitRc != nil {
+			rcs = append(rcs, hal.InitRc...)
+		}
+	}
+
+	for _, rc := range rcs {
+		if (rc.File != "" && rc.Name != "") ||
+			(rc.File == "" && rc.Name == "") {
+			fmt.Printf("rc.File %v and rc.Name %s can't both empty or non-empty", rc.File, rc.Name)
+		}
+	}
+	// post-generattion validation
+
+	// making sure all the init.rc are generated
+	for _, rc := range rcs {
+		srcFile := rc.Name
+		if rc.File != "" {
+			srcFile = rc.File
+		}
+		srcFile = "$(LOCAL_PATH)/" + srcFile
+		err := validateCopySrc(srcFile, genDir)
+		if err != nil {
+			fmt.Printf("[avs v] can't find copy sources: %s\n", srcFile)
+		}
+	}
+
+	return nil
 }
 
 // validateHalPackagesCopy vaildiate the binary blob copy
@@ -99,6 +136,7 @@ func validateFeatureFiles(spec *spec.Spec, genDir string) error {
 // path start with "$(LOCAL_PATH)" must in $genDir
 // all the other paths are relative the to ${ANDROID_BUILD_TOP}
 func validateCopySrc(src string, genDir string) error {
+	//fmt.Printf("validate src copy %s\n", src)
 	L := "$(LOCAL_PATH)"
 	if strings.HasPrefix(src, L) {
 		p := filepath.Join(genDir, src[len(L):])
