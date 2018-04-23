@@ -89,7 +89,8 @@ type CopyPackage struct {
 // RuntimeConfig is the RuntimeConfig File that will be installed on the device.
 type RuntimeConfig struct {
 	Src string `json:"src"`
-	// Default value is "system/etc/Basename(.Src)"
+	// The destination dir, the default value is "system/etc", and it can be
+	// override by setting alternative value, such as $(TARGET_COPY_OUT_VENDOR)/etc
 	DestDir string `json:"destDir,omitempty"`
 }
 

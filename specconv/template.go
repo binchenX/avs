@@ -154,10 +154,11 @@ func getFstabCopySrc(fs spec.Fstab) string {
 // RuntimeConfigInstructions turns the RuntimeConfig to a Android statement
 func RuntimeConfigInstructions(config spec.RuntimeConfig) string {
 	from := config.Src
-	dst := "system/etc/" + filepath.Base(from)
+	dstDir := "system/etc"
 	if config.DestDir != "" {
-		dst = config.DestDir
+		dstDir = config.DestDir
 	}
+	dst := dstDir + "/" + filepath.Base(from)
 	return from + ":" + dst
 }
 
