@@ -107,6 +107,14 @@ func removePackageTag(packageName string) string {
 	return ps[0]
 }
 
+func rcInstallDest(rc *spec.RcScripts) string {
+	if rc.ServicRc == "true" {
+		// rc to start a service for a particular hal copy to here
+		return "$(TARGET_COPY_OUT_VENDOR)/etc/init/"
+	}
+	return "root/"
+}
+
 func getInitRcCopyStatement(rcs []spec.RcScripts) string {
 	var s []string
 	for _, rc := range rcs {
@@ -116,7 +124,7 @@ func getInitRcCopyStatement(rcs []spec.RcScripts) string {
 		}
 
 		filepath.Base(name)
-		t := `    $(LOCAL_PATH)/` + name + `:root/` + filepath.Base(name) + ` \`
+		t := `    $(LOCAL_PATH)/` + name + ":" + rcInstallDest(&rc) + filepath.Base(name) + ` \`
 		s = append(s, t)
 	}
 

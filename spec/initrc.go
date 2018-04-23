@@ -3,6 +3,12 @@ package spec
 // RcScripts is a script follow Android init syntax and semantics, see[1].
 // [1]https://android.googlesource.com/platform/system/core/+/master/init/README.md
 type RcScripts struct {
+	// ServicRc indicate if this rc is for service only and it is used for
+	// start a service for a specific hal. Default to false.
+	// The differnce is the install destination:
+	// serviceRc:  "$(TARGET_COPY_OUT_VENDOR)/etc/init/",
+	// initRc:    "root/"
+	ServicRc string `json:"serviceRc,omitempty"`
 	// If Files is no nil, we will cp it directly $(LOCAL_PATH)/File to destination
 	// All the other attribution will be ignored
 	File string `json:"file,omitempty"`
