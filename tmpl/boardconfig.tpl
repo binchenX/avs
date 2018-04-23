@@ -64,7 +64,7 @@ TARGET_BOOTLOADER_BOARD_NAME := {{ $spec.Product.Name}}
 
 {{- end}} {{/**Target**/}}
 
-BOARD_KERNEL_CMDLINE := {{ $spec | FullCmdLine}}
+BOARD_KERNEL_CMDLINE := {{ $spec | getFullKernelCommand}}
 {{end }}
 
 #sepolicy

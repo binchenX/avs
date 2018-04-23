@@ -74,7 +74,7 @@
     },
     "boot_image": {
         "kernel": {
-            "cmd_line": "mmz=ddr,0,0,60M firmware_class.path=/system/etc/firmware",
+            "cmd_line": "mmz=ddr,0,0,60M",
             "local_kernel": "device/hisilicon/poplar-kernel/Image",
             "local_dtb": "device/hisilicon/poplar-kernel/hi3798cv200-poplar.dtb"
         },

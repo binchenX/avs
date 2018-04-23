@@ -176,19 +176,28 @@ func UserImageExt4(boardConfig *spec.BoardConfig) bool {
 	return false
 }
 
-// FullCmdLine return the full kernel command line
-func FullCmdLine(spec *spec.Spec) string {
+// getFullKernelCommand return the full kernel command line
+func getFullKernelCommand(spec *spec.Spec) string {
 	var s string
-	s += "androidboot.hardware=" + spec.Product.Device + " "
 
+	// 1. androidboot.xxx
+	s += "androidboot.hardware=" + spec.Product.Device + " "
 	selinuxMode := spec.BoardConfig.SELinux.Mode
 
 	// default to enforcing
 	if selinuxMode == "" {
 		selinuxMode = "enforcing"
 	}
-
 	s += "androidboot.selinux=" + selinuxMode + " "
+
+	// 2. stanard kernel cmdline
+	if hasVendorPartition(&spec.BoardConfig.PartitionTable) {
+		s += "firmware_class.path=/vendor/firmware" + " "
+	} else {
+		s += "firmware_class.path=/system/etc/firmware" + " "
+	}
+
+	// 3. vendor specific kernel cmdline
 	s += spec.BootImage.Kernel.CmdLine
 	return s
 }
@@ -210,7 +219,7 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"getFstabCopySrc":           getFstabCopySrc,
 		"RuntimeConfigInstructions": RuntimeConfigInstructions,
 		"UserImageExt4":             UserImageExt4,
-		"FullCmdLine":               FullCmdLine,
+		"getFullKernelCommand":      getFullKernelCommand,
 		"getVendorOut":              getVendorOut,
 	}
 	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
