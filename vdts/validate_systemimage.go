@@ -59,7 +59,8 @@ func validateHalInitRc(s *spec.Spec, genDir string) error {
 	return nil
 }
 
-// validateHalPackagesCopy vaildiate the binary blob copy
+// validateHalPackagesCopy vaildiate the binary blob copy, including
+// the share libary, the firmware and the kernel drivers
 func validateHalPackagesCopy(spec *spec.Spec, genDir string) error {
 	var allCopyPkgs []string
 
@@ -67,6 +68,18 @@ func validateHalPackagesCopy(spec *spec.Spec, genDir string) error {
 		if h.Packages != nil && h.Packages.Copy != nil {
 			for _, cp := range h.Packages.Copy {
 				allCopyPkgs = append(allCopyPkgs, cp.Src)
+			}
+		}
+
+		if h.Firmwares != nil {
+			for _, f := range []string(*(h.Firmwares)) {
+				allCopyPkgs = append(allCopyPkgs, f)
+			}
+		}
+
+		if h.Drivers != nil {
+			for _, d := range []string(*(h.Drivers)) {
+				allCopyPkgs = append(allCopyPkgs, d)
 			}
 		}
 	}
@@ -136,7 +149,7 @@ func validateFeatureFiles(spec *spec.Spec, genDir string) error {
 // path start with "$(LOCAL_PATH)" must in $genDir
 // all the other paths are relative the to ${ANDROID_BUILD_TOP}
 func validateCopySrc(src string, genDir string) error {
-	//fmt.Printf("validate src copy %s\n", src)
+	//	fmt.Printf("validate src copy %s\n", src)
 	L := "$(LOCAL_PATH)"
 	if strings.HasPrefix(src, L) {
 		p := filepath.Join(genDir, src[len(L):])
