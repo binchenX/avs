@@ -32,21 +32,12 @@
     "features": [
         "android.hardware.wifi.xml"
     ],
-    "build_configs": [
-        "WPA_SUPPLICANT_VERSION := VER_0_8_X",
-        "BOARD_WPA_SUPPLICANT_DRIVER := NL80211",
-        "BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_mtk",
-        "BOARD_HOSTAPD_DRIVER := NL80211",
-        "BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_mtk",
-        "BOARD_WLAN_DEVICE := MediaTek"
-    ],
     "required_packages": {
         "build": [
             "android.hardware.wifi@1.0-service",
             "wificond",
             "wificond.rc",
             "libwpa_client",
-            "hostapd",
             "wpa_cli"
         ],
         "copy": [
@@ -54,7 +45,11 @@
                 "src": "vendor/hisilicon/poplar/proprietary/libwifi-hal.so"
             },
             {
-                "src": "vendor/hisilicon/poplar/proprietary/wpa_supplicant"
+                "src": "vendor/hisilicon/poplar/proprietary/wpa_supplicant",
+                "destDir": "bin/hw"
+            },
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/hostapd"
             }
         ]
     },
@@ -65,7 +60,7 @@
             "services": [
                 {
                     "name": "wpa_supplicant",
-                    "path": "/system/vendor/bin/hw/wpa_supplicant",
+                    "path": "/vendor/bin/hw/wpa_supplicant",
                     "args": "-iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -e/data/misc/wifi/entropy.bin  -g@android:wpa_wlan0",
                     "options": [
                         "socket wpa_wlan0 dgram 660 wifi wifi",
@@ -79,7 +74,7 @@
                 {
                     "triggers": "boot",
                     "commands": [
-                        "insmod /vendor/lib/modules/btmtk_usb.ko"
+                        "insmod /vendor/lib/modules/wlan_mt7668_usb.ko"
                     ]
                 }
             ]
@@ -100,6 +95,9 @@
         "vendor/hisilicon/poplar/proprietary/firmware/WIFI_RAM_CODE_MT7668.bin",
         "vendor/hisilicon/poplar/proprietary/firmware/TxPwrLimit_MT76x8.dat",
         "vendor/hisilicon/poplar/proprietary/firmware/wifi.cfg"
+    ],
+    "drivers": [
+        "device/hisilicon/poplar-kernel/modules/wlan_mt7668_usb.ko"
     ],
     "properties": [
         "wifi.interface=wlan0",

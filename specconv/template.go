@@ -219,14 +219,13 @@ func getFullKernelCommand(spec *spec.Spec) string {
 
 // InstsallFirmware is the instruction to install firmware on target
 func InstsallFirmware(src string) string {
-	// FIXME: always use /vendor/firmware now
-	return src + ":" + "/vendor/firmware/" + filepath.Base(src)
+	return src + ":" + "$(TARGET_COPY_OUT_VENDOR)/firmware/" + filepath.Base(src)
 }
 
 // InstsallDriver is the instruction to install drivers on target
 func InstsallDriver(src string) string {
 	// TODO: generate the insmod instruction in the service.rc
-	return src + ":" + "/vendor/lib/modules/" + filepath.Base(src)
+	return src + ":" + "$(TARGET_COPY_OUT_VENDOR)/lib/modules/" + filepath.Base(src)
 }
 
 // f - generated output file

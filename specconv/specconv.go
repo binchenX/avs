@@ -165,9 +165,16 @@ func hasHal(spec *spec.Spec, name string) (int, bool) {
 	return -1, false
 }
 
-// find hal.*.overlay file in the dir, the * is the hal feature name.
-// if there is already a corresponding feature spec in the spec passed in,
+// Find the overlay file in the dir and override it.
+// If there is already a corresponding feature spec in the spec passed in,
 // the new one will override it; otherwise, the new one will be added.
+// The overlay file follow the format of `ol.hal.[hw.halFeature].json`,
+// 1. "ol." is used to indicate it is an overlay file;
+// 2. "hal." indicates it is hal overlay, the only support overlay at the moment.
+// 3. [hw.halFeature] can be anything but a good practice is is hw for the device name,
+// halFeature for the exactly hal feature, say hikey.wifi. This enable us to do autoload
+// or/and validation.
+// 4. ".json" is to make the file easy to work with editor.
 func override(spec *spec.Spec, dir string) *spec.Spec {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
@@ -175,8 +182,7 @@ func override(spec *spec.Spec, dir string) *spec.Spec {
 	}
 
 	for _, f := range files {
-		if strings.HasSuffix(filepath.Base(f.Name()), ".overlay") &&
-			strings.HasPrefix(filepath.Base(f.Name()), "hal.") {
+		if strings.HasPrefix(filepath.Base(f.Name()), "ol.hal.") {
 			halSpec, err := LoadHalSpec(f.Name())
 			if err != nil {
 				fmt.Printf("Fail to load hal override spec %s\n", f.Name())

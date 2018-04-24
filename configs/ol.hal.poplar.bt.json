@@ -1,0 +1,61 @@
+{
+    "name": "bt",
+    "manifests": [
+        {
+            "name": "android.hardware.bluetooth",
+            "format": "hidl",
+            "transport": {
+                "mode": "hwbinder"
+            },
+            "version": "1.0",
+            "interface": {
+                "name": "IBluetoothHci",
+                "instance": "default"
+            }
+        }
+    ],
+    "features": [
+        "android.hardware.bluetooth.xml",
+        "android.hardware.bluetooth_le.xml"
+    ],
+    "required_packages": {
+        "build": [
+            "android.hardware.bluetooth@1.0-service",
+            "android.hardware.bluetooth@1.0-service.rc",
+            "android.hardware.bluetooth@1.0-impl"
+        ],
+        "copy": [
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/audio.a2dp.default.so"
+            },
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/bluetooth.default.so"
+            },
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/libbluetooth_mtk.so"
+            },
+            {
+                "src": "vendor/hisilicon/poplar/proprietary/libbt-vendor.so"
+            }
+        ]
+    },
+    "init.rc": [
+        {
+            "serviceRc": "true",
+            "name": "bt_mkt.rc",
+            "actions": [
+                {
+                    "triggers": "boot",
+                    "commands": [
+                        "insmod /vendor/lib/modules/btmtk_usb.ko"
+                    ]
+                }
+            ]
+        }
+    ],
+    "firmwares": [
+    ],
+    "drivers": [
+        "device/hisilicon/poplar-kernel/modules/btmtk_usb.ko"
+    ]
+}
