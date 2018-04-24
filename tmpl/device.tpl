@@ -77,6 +77,14 @@ PRODUCT_COPY_FILES += \
 {{- end}}
 {{- end}}
 
+{{- if .Drivers}}
+## drivers
+PRODUCT_COPY_FILES += \
+{{- range .Drivers }}
+    {{ . | InstsallDriver }} \
+{{- end}}
+{{- end}}
+
 {{- if .RawInstructions}}
 # raw instructions - do I have a better place to go?
 {{- range .RawInstructions}}

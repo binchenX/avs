@@ -24,6 +24,8 @@ type HAL struct {
 	Packages *Packages `json:"required_packages,omitempty"`
 	// Firmwares are the firmware required.
 	Firmwares *Firmwares `json:"firmwares,omitempty"`
+	// Drivers are the drivers need to be installed/inmod.
+	Drivers *Drivers `json:"drivers,omitempty"`
 	// RawInstructions are the instructions that aren't modeled at the moment and will be copied
 	// directly to the device.mk.
 	RawInstructions []string `json:"raw,omitempty"`
@@ -104,3 +106,6 @@ type Property struct {
 // Each string is the source firmware to copy from, the copy destination is fixed
 // see getFirmwareLocation()
 type Firmwares []string
+
+// Drivers are the drivers need to be installed (insmod) to the kernel.
+type Drivers []string

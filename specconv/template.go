@@ -223,6 +223,12 @@ func InstsallFirmware(src string) string {
 	return src + ":" + "/vendor/firmware/" + filepath.Base(src)
 }
 
+// InstsallDriver is the instruction to install drivers on target
+func InstsallDriver(src string) string {
+	// TODO: generate the insmod instruction in the service.rc
+	return src + ":" + "/vendor/lib/modules/" + filepath.Base(src)
+}
+
 // f - generated output file
 // templateFile - template
 // spec - spec
@@ -243,6 +249,7 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"getFullKernelCommand":      getFullKernelCommand,
 		"getVendorOut":              getVendorOut,
 		"InstsallFirmware":          InstsallFirmware,
+		"InstsallDriver":            InstsallDriver,
 	}
 	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
 
