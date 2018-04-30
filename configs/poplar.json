@@ -337,12 +337,6 @@
             ]
         },
         {
-            "name": "bluetooth",
-            "build_configs": [
-                "BOARD_HAVE_BLUETOOTH_BCM := true"
-            ]
-        },
-        {
             "name": "drm",
             "required_packages": {
                 "build": [
