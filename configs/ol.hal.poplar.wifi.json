@@ -38,7 +38,9 @@
             "wificond",
             "wificond.rc",
             "libwpa_client",
-            "wpa_cli"
+            "wpa_cli",
+            "libkeystore-engine-wifi-hidl",
+            "libkeystore-wifi-hidl"
         ],
         "copy": [
             {
