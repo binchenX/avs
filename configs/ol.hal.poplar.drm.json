@@ -1,0 +1,40 @@
+{
+    "name": "drm",
+    "required_packages": {
+        "build": [
+            "android.hardware.drm@1.0-impl"
+        ]
+    },
+    "raw": [
+        "ifeq ($(TARGET_TEE_IS_OPTEE), true)",
+        "   $(call inherit-product-if-exists, device/hisilicon/poplar/optee-packages.mk)",
+        "endif"
+    ],
+    "init.rc": [
+        {
+            "serviceRc": "true",
+            "name": "optee.rc",
+            "services": [
+                {
+                    "name": "tee-supplicant",
+                    "path": "/system/bin/tee-supplicant",
+                    "options": [
+                        "class main",
+                        "user  root",
+                        "oneshot"
+                    ]
+                }
+            ],
+            "actions": [
+                {
+                    "triggers": "post-fs-data",
+                    "commands": [
+                        "mkdir /data/tee 0775 shell shell",
+                        "mkdir /data/tee/optee_armtz 0775 shell shell",
+                        "restorecon_recursive /data/tee"
+                    ]
+                }
+            ]
+        }
+    ]
+}
