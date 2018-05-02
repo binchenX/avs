@@ -12,12 +12,46 @@ import (
 )
 
 var tmlMap = map[string]string{
-	"vendorsetup.sh":     "vendorsetup.tpl",
-	"AndroidProducts.mk": "androidproducts.tpl",
-	"BoardConfig.mk":     "boardconfig.tpl",
-	"device.mk":          "device.tpl",
-	"manifest.xml":       "manifests.tpl",
+	"vendorsetup.sh":     tplVendorSetup,
+	"AndroidProducts.mk": tplAndriodProduct,
+	"BoardConfig.mk":     tplBoard,
+	"device.mk":          tplDevice,
+	"manifest.xml":       tplManifest,
 }
+
+// all the templates
+const (
+	tplVendorSetup    string = "vendorsetup.tpl"
+	tplAndriodProduct string = "androidproducts.tpl"
+	tplBoard          string = "boardconfig.tpl"
+	tplDevice         string = "device.tpl"
+	tplManifest       string = "manifests.tpl"
+	tplProduct        string = "product.tpl"
+	tplUevent         string = "uevent.tpl"
+	tplFstab          string = "fstab.tpl"
+	tplUsbRc          string = "usb.tpl"
+	tplInitRc         string = "initrc.tpl"
+)
+
+const (
+	// src path
+	featureFileSrc string = "frameworks/native/data/etc"
+	productDir     string = "$(SRC_TARGET_DIR)/product"
+	// dest path
+	defaultFeatureFileDst   string = "system/etc/permissions"
+	defaultFirmwareDst      string = outVendorDir + "/firmware"
+	defaultKernelModuleDst  string = outVendorDir + "/lib/modules"
+	defaultRuntimeConfigDst string = "system/etc"
+)
+
+// some variables used and expected by android build system
+const (
+	// set by avs and used by Android Build system
+	outVendorDir string = "$(TARGET_COPY_OUT_VENDOR)"
+	// used by Android build system to find a file in host system
+	// as copy source path
+	copyLocal string = "$(LOCAL_PATH)"
+)
 
 // getGenFileName return the path for geneated file
 func getGenFileName(name string) string {
@@ -27,7 +61,7 @@ func getGenFileName(name string) string {
 // called by GenerateScaffold to setup product specfic file and template mapping
 func addProductSpecificFileMapping(spec *spec.Spec) {
 	productMK := fmt.Sprintf("%s.mk", spec.Product.Name)
-	tmlMap[productMK] = "product.tpl"
+	tmlMap[productMK] = tplProduct
 
 	// uevent.rc
 	rc := spec.BootImage.Rootfs.UeventRc
@@ -36,7 +70,7 @@ func addProductSpecificFileMapping(spec *spec.Spec) {
 		if ueventRc == "" {
 			ueventRc = getGenFileName("ueventd.rc")
 		}
-		tmlMap[ueventRc] = "uevent.tpl"
+		tmlMap[ueventRc] = tplUevent
 	}
 
 	// fstab.hw
@@ -45,22 +79,22 @@ func addProductSpecificFileMapping(spec *spec.Spec) {
 	if fs.Name != "" {
 		fileName = fs.Name
 	}
-	tmlMap[fileName] = "fstab.tpl"
+	tmlMap[fileName] = tplFstab
 
 	// init.hw.usb.rc
 	if spec.BoardConfig.USBGadget != nil {
 		usbRcFile := fmt.Sprintf("rootfs/init.%s.usb.rc", spec.Product.Name)
-		tmlMap[usbRcFile] = "usb.tpl"
+		tmlMap[usbRcFile] = tplUsbRc
 	}
 }
 
 // hardcoded by Android framework and used the Android Device configure files
 func getFeatureFileSrcDir() string {
-	return "frameworks/native/data/etc"
+	return featureFileSrc
 }
 
 func getFeatureFileDestDir() string {
-	return "system/etc/permissions"
+	return defaultFeatureFileDst
 }
 
 func hasVendorPartition(pt *spec.PartitionTable) bool {
@@ -92,19 +126,19 @@ func getCopyInstruction(cp spec.CopyPackage) string {
 	var dst string
 	if cp.DestDir == "" {
 		if strings.HasSuffix(cp.Src, ".so") {
-			dst = "$(TARGET_COPY_OUT_VENDOR)" + "/lib"
+			dst = outVendorDir + "/lib"
 		} else {
-			dst = "$(TARGET_COPY_OUT_VENDOR)" + "/bin"
+			dst = outVendorDir + "/bin"
 		}
 	} else {
-		dst = "$(TARGET_COPY_OUT_VENDOR)" + "/" + cp.DestDir
+		dst = join(outVendorDir, cp.DestDir)
 	}
 
-	return cp.Src + ":" + dst + "/" + filepath.Base(cp.Src)
+	return cp.Src + ":" + join(dst, filepath.Base(cp.Src))
 }
 
 func getInheritProductMkDir(product string) string {
-	return "$(SRC_TARGET_DIR)/product/" + product + ".mk"
+	return join(productDir, product+".mk")
 }
 
 // removePackageTag remove the possible tag
@@ -116,9 +150,9 @@ func removePackageTag(packageName string) string {
 func rcInstallDest(rc *spec.RcScripts) string {
 	if rc.ServicRc == "true" {
 		// rc to start a service for a particular hal copy to here
-		return "$(TARGET_COPY_OUT_VENDOR)/etc/init/"
+		return join(outVendorDir, "etc/init")
 	}
-	return "root/"
+	return "root"
 }
 
 func getInitRcCopyStatement(rcs []spec.RcScripts) string {
@@ -130,23 +164,27 @@ func getInitRcCopyStatement(rcs []spec.RcScripts) string {
 		}
 
 		filepath.Base(name)
-		t := `$(LOCAL_PATH)/` + name + ":" + rcInstallDest(&rc) + filepath.Base(name) + ` \`
+		t := join(copyLocal, name) + ":" + join(rcInstallDest(&rc), filepath.Base(name)) + ` \`
 		s = append(s, t)
 	}
 
 	return strings.Join(s[:], "\n")
 }
 
+func join(dir string, file string) string {
+	return filepath.Join(dir, file)
+}
+
 func getUeventdCopySrc(uc spec.UeventRc) string {
 	if uc.File != "" {
-		return `$(LOCAL_PATH)/` + uc.File
+		return join(copyLocal, uc.File)
 	}
 
 	src := "ueventd.rc.gen"
 	if uc.Name != "" {
 		src = uc.Name
 	}
-	return `$(LOCAL_PATH)/` + src
+	return join(copyLocal, src)
 }
 
 func getFstabCopySrc(fs spec.Fstab) string {
@@ -154,17 +192,17 @@ func getFstabCopySrc(fs spec.Fstab) string {
 	if fs.Name != "" {
 		src = fs.Name
 	}
-	return `$(LOCAL_PATH)/` + src
+	return copyLocal + "/" + src
 }
 
 // RuntimeConfigInstructions turns the RuntimeConfig to a Android statement
 func RuntimeConfigInstructions(config spec.RuntimeConfig) string {
 	from := config.Src
-	dstDir := "system/etc"
+	dstDir := defaultRuntimeConfigDst
 	if config.DestDir != "" {
 		dstDir = config.DestDir
 	}
-	dst := dstDir + "/" + filepath.Base(from)
+	dst := join(dstDir, filepath.Base(from))
 	return from + ":" + dst
 }
 
@@ -191,6 +229,7 @@ func UserImageExt4(boardConfig *spec.BoardConfig) bool {
 	return false
 }
 
+// for kernel command, absolute path in target system
 func getFirmwareLocation(spec *spec.Spec) string {
 	if hasVendorPartition(&spec.BoardConfig.PartitionTable) {
 		return "/vendor/firmware"
@@ -219,13 +258,13 @@ func getFullKernelCommand(spec *spec.Spec) string {
 
 // InstsallFirmware is the instruction to install firmware on target
 func InstsallFirmware(src string) string {
-	return src + ":" + "$(TARGET_COPY_OUT_VENDOR)/firmware/" + filepath.Base(src)
+	return src + ":" + defaultFirmwareDst + "/" + filepath.Base(src)
 }
 
 // InstsallDriver is the instruction to install drivers on target
 func InstsallDriver(src string) string {
 	// TODO: generate the insmod instruction in the service.rc
-	return src + ":" + "$(TARGET_COPY_OUT_VENDOR)/lib/modules/" + filepath.Base(src)
+	return src + ":" + defaultKernelModuleDst + "/" + filepath.Base(src)
 }
 
 // f - generated output file
@@ -263,11 +302,10 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 
 // executeTemplateForRc genereate Rcscript only
 func executeTemplateForRc(f *os.File, rc *spec.RcScripts) (err error) {
-	templateFile := "initrc.tpl"
 	funcMap := template.FuncMap{}
-	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
+	tmpFile := filepath.Join(avsInstallDir, "tmpl", tplInitRc)
 
-	tmpl, err := template.New(templateFile).Funcs(funcMap).ParseFiles(tmpFile)
+	tmpl, err := template.New(tplInitRc).Funcs(funcMap).ParseFiles(tmpFile)
 	if err != nil {
 		fmt.Println("rcScript template failed", tmpFile, err)
 		return err
