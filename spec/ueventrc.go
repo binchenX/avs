@@ -18,4 +18,6 @@ type UeventRule struct {
 	Mode string `json:"mode"`
 	UID  string `json:"uid"`
 	GUID string `json:"guid"`
+	// Sepolicy label, wasn't used now.
+	Lable string `json:"lable,omitempty"`
 }
