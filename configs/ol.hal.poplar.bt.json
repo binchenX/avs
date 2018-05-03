@@ -59,7 +59,7 @@
     ],
     "devs": [
         {
-            "node": "/dev/uhid",
+            "node": "/dev/stpbt",
             "mode": "0666",
             "uid": "bluetooth",
             "guid": "bluetooth"
