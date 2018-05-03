@@ -70,6 +70,8 @@ type HAL struct {
 	// 2. This HAL implementation has a daemon.
 	// see spec_example.go for examples
 	SEPolicy *SEPolicyF `json:"sepolicy,omitempty"`
+	// Device nodes needed by this HAL/feature, with uevent rules
+	Devices []UeventRule `json:"devs,omitempty"`
 }
 
 // Packages to build or copy.
