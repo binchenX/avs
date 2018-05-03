@@ -1,24 +1,20 @@
 package spec
 
-// HalType is the type of the HAL
-type HalType string
-
 // valid HAL name
-// It uses part of the spec.Feature as the hal name, in the format of android.hardware.[halName].xml
 const (
-	AUDIO    HalType = "audio"
-	BT       HalType = "bluetooth"
-	CAMERA   HalType = "camera"
-	CEC      HalType = "hdmi.cec"
-	DRM      HalType = "drm"
-	FP       HalType = "fingerprint"
-	GRAPHICS HalType = "graphics"
-	NFC      HalType = "nfc"
-	SENSOR   HalType = "sensor"
-	VIDEO    HalType = "media.codec"
-	VR       HalType = "vr"
-	VULKAN   HalType = "vulkan"
-	WIFI     HalType = "wifi"
+	AUDIO    string = "audio"
+	BT       string = "bluetooth"
+	CAMERA   string = "camera"
+	CEC      string = "hdmi.cec"
+	DRM      string = "drm"
+	FP       string = "fingerprint"
+	GRAPHICS string = "graphics"
+	NFC      string = "nfc"
+	SENSOR   string = "sensor"
+	VIDEO    string = "media.codec"
+	VR       string = "vr"
+	VULKAN   string = "vulkan"
+	WIFI     string = "wifi"
 )
 
 // HAL is all the HAL related configrations (other than the HAL code itself) for this device.

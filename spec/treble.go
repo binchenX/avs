@@ -2,7 +2,6 @@ package spec
 
 // This file contains all things related with treble: hal manifest, vndk, dtb etc.
 
-// https://source.android.com/devices/architecture/vintf/objects
 // validate hal.format
 const (
 	HIDL   string = "hidl"
