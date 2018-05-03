@@ -1,14 +1,35 @@
 package spec
 
+// HalType is the type of the HAL
+type HalType string
+
+// valid HAL name
+// It uses part of the spec.Feature as the hal name, in the format of android.hardware.[halName].xml
+const (
+	AUDIO    HalType = "audio"
+	BT       HalType = "bluetooth"
+	CAMERA   HalType = "camera"
+	CEC      HalType = "hdmi.cec"
+	DRM      HalType = "drm"
+	FP       HalType = "fingerprint"
+	GRAPHICS HalType = "graphics"
+	NFC      HalType = "nfc"
+	SENSOR   HalType = "sensor"
+	VIDEO    HalType = "media.codec"
+	VR       HalType = "vr"
+	VULKAN   HalType = "vulkan"
+	WIFI     HalType = "wifi"
+)
+
 // HAL is all the HAL related configrations (other than the HAL code itself) for this device.
 type HAL struct {
-	// Name is the name of this HAL.
+	// Name is the name of this HAL, see HalType for valid Name
 	Name string `json:"name"`
 	// Manifests is the manifest required by Treble (Android O).
 	Manifests []Manifest `json:"manifests,omitempty"`
 	// Features are features supported by this HAL, it will be copied to device.
 	// All the features files must exsits in frameworks/native/data/etc/
-	Features []string `json:"features,omitempty"`
+	Features []Feature `json:"features,omitempty"`
 	// BuildConfigs are the build configrations related with this features. It can either be a build
 	// configration for framework (e.g Wifi has generic framework support, and that configrations should
 	// be put in Wifi HAL.BuildConfigs), or for the particular HAL implementation (say your gralloc

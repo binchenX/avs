@@ -1,6 +1,8 @@
 // Package spec includes the Android build configration specfication.
 package spec
 
+// This is the entry of the spec
+
 // Spec is the specification for Android device configration.
 // Attributes without "omitempty" are required, otherwise it is schema error.
 type Spec struct {
@@ -51,34 +53,17 @@ type BoardConfig struct {
 	// implemented by frameworks (e.g android.software.webview), or features directly supported by
 	// kernel (e.g android.hardware.usb.host.xml).
 	// All the valid features are list here [1].
-	// [1] https://android.googlesource.com/platform/frameworks/native/+/master/data/etc
-	BoardFeatures []string `json:"board_features,omitempty"`
-}
-
-// PartitionTable is the partion table for the device.
-type PartitionTable struct {
-	FlashBockSize string `json:"flash_block_size"`
-	// mbr/ebr, gpt, others
-	Scheme     string      `json:"scheme"`
-	Partitions []Partition `json:"partitions"`
-}
-
-// Partition is the configration for each partition.
-type Partition struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
-	Size string `json:"size"`
+	BoardFeatures []Feature `json:"board_features,omitempty"`
 }
 
 // Target is the static build configuration that impacts how the host machine
 // will built the images.
 type Target struct {
-	Archs      []Arch `json:"archs"`
-	NoRecovery bool   `json:"no_recovery"`
-	NoRadio    bool   `json:"no_radioimage"`
-	Binder     string `json:"binder"`
-	// Default to Product.Name
-	BoardPlatform string `json:"boardPlatform,omitempty"`
+	Archs         []Arch `json:"archs"`
+	NoRecovery    bool   `json:"no_recovery"`
+	NoRadio       bool   `json:"no_radioimage"`
+	Binder        string `json:"binder"`
+	BoardPlatform string `json:"boardPlatform,omitempty"` // Default to Product.Name
 }
 
 // Arch configration.
@@ -97,9 +82,8 @@ type CPU struct {
 
 // Bootloader is the configrations for bootloader.
 type Bootloader struct {
-	Has2ndBootloader bool `json:"has_2nd_bootloader,omitempty"`
-	// Default to Product Name
-	BoardName string `json:"board_name,omitempty"`
+	Has2ndBootloader bool   `json:"has_2nd_bootloader,omitempty"`
+	BoardName        string `json:"board_name,omitempty"` // Default to Product Name
 }
 
 // BootImage contains all the configrations that will compromise the final boot image.
@@ -124,7 +108,7 @@ type MkBootImageLoadArgsLoadAddress struct {
 	// default to 0x8000
 	RamdiskOffset string `json:"ramkdisk_offset"`
 	// default to 0x1000000
-	KernelOffset string `json:"kernel_offset`
+	KernelOffset string `json:"kernel_offset"`
 }
 
 // Kernel includes the kernel command line, and where to look for the kernel image and DTB.
@@ -153,23 +137,6 @@ type RootfsOverlay struct {
 	UeventRc *UeventRc `json:"uevent.rc"`
 }
 
-// Fstab is the mount configration.
-type Fstab struct {
-	// Name will be the file name for the generated script and it will be copied to device
-	// with same name. Default name ueventd.rc.gen
-	Name   string  `json:"name,omitempty"`
-	Mounts []Mount `json:"mounts"`
-}
-
-// Mount is mount intruction.
-type Mount struct {
-	Src       string `json:"src"`
-	Dst       string `json:"dst"`
-	Type      string `json:"type"`
-	MntFlag   string `json:"mnt_flag"`
-	FsMgrFlag string `json:"fs_mgr_flag"`
-}
-
 // FrameworkConfigs includes the build time and runtime configurations for frameworks
 // components(e.g dalvik).
 type FrameworkConfigs struct {
@@ -184,12 +151,4 @@ type FrameworkConfigs struct {
 // Use it *rarely*.
 type VendorRaw struct {
 	Instructions []string `json:"instructions"`
-}
-
-// USBGadget is the adb config for usb
-type USBGadget struct {
-	Serialnumber string `json:"serialnumber"`
-	Manufacturer string `json:"manufacturer"`
-	Product      string `json:"product"`
-	Controller   string `json:"controller"`
 }

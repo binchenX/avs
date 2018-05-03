@@ -2,6 +2,26 @@ package spec
 
 // This file contains all things related with treble: hal manifest, vndk, dtb etc.
 
+// https://source.android.com/devices/architecture/vintf/objects
+// validate hal.format
+const (
+	HIDL   string = "hidl"
+	NATIVE string = "native"
+)
+
+// valid hal.transport
+const (
+	HB string = "hwbinder"
+	PT string = "passthrough"
+)
+
+// valid hal.transport.arch
+const (
+	A32 string = "32"
+	A64 string = "64"
+	AB  string = "32+64"
+)
+
 // Manifest is the manifest for the interface.
 type Manifest struct {
 	Name      string           `json:"name"`

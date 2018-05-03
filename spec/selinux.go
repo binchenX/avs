@@ -15,6 +15,8 @@ type SELinux struct {
 	// Themde set here will override the kernel commandline and default is SElinuxModeEnforcing
 	Mode      string `json:"mode"`
 	PolicyDir string `json:"policyDir"`
+	// TODO: this should goes to manifest.xml
+	Version string `json:"version,omitempty"`
 }
 
 // SEPolicyF is the sepolicy configration.

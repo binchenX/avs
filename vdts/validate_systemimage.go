@@ -115,18 +115,18 @@ func validateHalRuntimeConfigs(spec *spec.Spec, genDir string) error {
 
 // validateFeatureFiles validate all the feautres files, it can be found in
 // either HAL declaration or BoardConfigs
-func validateFeatureFiles(spec *spec.Spec, genDir string) error {
+func validateFeatureFiles(sp *spec.Spec, genDir string) error {
 	var invalid []string
 
-	var allFeatures []string
+	var allFeatures []spec.Feature
 
 	// fixed Board Features
-	for _, f := range spec.BoardConfig.BoardFeatures {
+	for _, f := range sp.BoardConfig.BoardFeatures {
 		allFeatures = append(allFeatures, f)
 	}
 
 	// HAL features
-	for _, h := range spec.Hals {
+	for _, h := range sp.Hals {
 		for _, f := range h.Features {
 			allFeatures = append(allFeatures, f)
 		}
@@ -135,8 +135,8 @@ func validateFeatureFiles(spec *spec.Spec, genDir string) error {
 	// validate all the feature files
 	featureFileDir := "frameworks/native/data/etc/"
 	for _, f := range allFeatures {
-		if err := validateCopySrc(featureFileDir+f, genDir); err != nil {
-			invalid = append(invalid, featureFileDir+f)
+		if err := validateCopySrc(featureFileDir+string(f), genDir); err != nil {
+			invalid = append(invalid, featureFileDir+string(f))
 		}
 	}
 
