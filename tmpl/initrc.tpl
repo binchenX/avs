@@ -1,13 +1,13 @@
-{{- range .Imports }}
+{{- range .Imports -}}
 import {{.}}
-{{- end}}
+{{end}}
 
 {{- range .Actions }}
 on {{.Triggers}}
     {{- range .Commands}}
     {{.}}
     {{- end}}
-{{- end}}
+{{end}}
 
 
 {{- range .Services}}
