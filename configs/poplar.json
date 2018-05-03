@@ -134,11 +134,31 @@
             },
             "init.rc": [
                 {
-                    "file": "rootfs/init.poplar.rc"
+                    "name": "rootfs/init.poplar.rc",
+                    "imports": [
+                        "init.${ro.hardware}.usb.rc"
+                    ],
+                    "actions": [
+                        {
+                            "triggers": "init",
+                            "commands": [
+                                "mount debugfs /sys/kernel/debug /sys/kernel/debug",
+                                "# switch USB to peripheral",
+                                "write /sys/kernel/debug/hisi_inno_phy/role \"peripheral\""
+                            ]
+                        },
+                        {
+                            "triggers": "fs",
+                            "commands": [
+                                "mount_all ./fstab.poplar",
+                                "swapon_all ./fstab.poplar"
+                            ]
+                        }
+                    ]
                 }
             ],
             "uevent.rc": {
-                "file": "rootfs/ueventd.poplar.rc"
+                "name": "rootfs/ueventd.poplar.rc"
             }
         }
     },
@@ -166,6 +186,26 @@
         },
         {
             "name": "graphics",
+            "devs": [
+                {
+                    "node": "/dev/mali*",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "graphics"
+                },
+                {
+                    "node": "/dev/graphics/fb*",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "graphics"
+                },
+                {
+                    "node": "/dev/ion",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "graphics"
+                }
+            ],
             "manifests": [
                 {
                     "name": "android.hardware.graphics.composer",
@@ -325,7 +365,7 @@
                     "services": [
                         {
                             "name": "hiavplayer",
-                            "path": "/system/vendor/bin/hiavplayer",
+                            "path": "/vendor/bin/hiavplayer",
                             "options": [
                                 "class main",
                                 "user  system",
@@ -333,6 +373,104 @@
                             ]
                         }
                     ]
+                }
+            ],
+            "devs": [
+                {
+                    "node": "/dev/hi_adec",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_adsp",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_ai",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_ao",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_disp",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_hdmi",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_log",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_module",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_stat",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_sync",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_sys",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_userproc",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_vdec",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_vo",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/hi_vpss",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
+                },
+                {
+                    "node": "/dev/mmz_userdev",
+                    "mode": "0666",
+                    "uid": "system",
+                    "guid": "audio"
                 }
             ]
         },
@@ -373,6 +511,20 @@
                             ]
                         }
                     ]
+                }
+            ],
+            "devs": [
+                {
+                    "node": "/dev/tee0",
+                    "mode": "0666",
+                    "uid": "shell",
+                    "guid": "shell"
+                },
+                {
+                    "node": "/dev/teepriv0",
+                    "mode": "0666",
+                    "uid": "shell",
+                    "guid": "shell"
                 }
             ]
         }

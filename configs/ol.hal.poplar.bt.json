@@ -53,9 +53,16 @@
             ]
         }
     ],
-    "firmwares": [
-    ],
+    "firmwares": [],
     "drivers": [
         "device/hisilicon/poplar-kernel/modules/btmtk_usb.ko"
+    ],
+    "devs": [
+        {
+            "node": "/dev/uhid",
+            "mode": "0666",
+            "uid": "bluetooth",
+            "guid": "bluetooth"
+        }
     ]
 }
