@@ -21,6 +21,32 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
+			Name:    "bootimg",
+			Aliases: []string{"b"},
+			Usage:   "parse and extract android bootimg",
+			Flags: []cli.Flag{
+				cli.StringFlag{Name: "image", Value: "", Usage: "boot image file"},
+				cli.BoolFlag{Name: "extract", Usage: "extract bootimage"},
+			},
+			Action: func(c *cli.Context) error {
+				b := images.Bootimg{ImagePath: c.String("image")}
+
+				// dump the header
+				v, err := b.Hdr()
+				if err != nil {
+					log.Fatalln(err)
+				}
+
+				fmt.Println(v)
+
+				if c.Bool("extract") {
+					b.Unpack()
+				}
+				return nil
+			},
+		},
+
+		{
 			Name:    "ramdisk",
 			Aliases: []string{"r"},
 			Usage:   "extract the ramdisk",
@@ -83,32 +109,6 @@ func main() {
 					} else {
 						fmt.Println(configs)
 					}
-				}
-				return nil
-			},
-		},
-
-		{
-			Name:    "bootimg",
-			Aliases: []string{"b"},
-			Usage:   "parse and extract android bootimg",
-			Flags: []cli.Flag{
-				cli.StringFlag{Name: "image", Value: "", Usage: "boot image file"},
-				cli.BoolFlag{Name: "extract", Usage: "extract bootimage"},
-			},
-			Action: func(c *cli.Context) error {
-				b := images.Bootimg{ImagePath: c.String("image")}
-
-				// dump the header
-				v, err := b.Hdr()
-				if err != nil {
-					log.Fatalln(err)
-				}
-
-				fmt.Println(v)
-
-				if c.Bool("extract") {
-					b.Unpack()
 				}
 				return nil
 			},
