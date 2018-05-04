@@ -23,7 +23,7 @@ func main() {
 		{
 			Name:    "ramdisk",
 			Aliases: []string{"r"},
-			Usage:   "regerate the device config",
+			Usage:   "extract the ramdisk",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "image", Value: "", Usage: "ramdisk.img image for unpack"},
 				cli.StringFlag{Name: "extract", Value: "avs_ramdisk", Usage: "extracted out dir"},
@@ -40,10 +40,11 @@ func main() {
 
 		{
 			Name:    "kernel",
-			Aliases: []string{"r"},
+			Aliases: []string{"k"},
+			Usage:   "dump kernel info and configs",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "image", Value: "", Usage: "kernel image file"},
-				cli.BoolFlag{Name: "configs"},
+				cli.BoolFlag{Name: "configs", Usage: "enable kernel config dump"},
 			},
 			Action: func(c *cli.Context) error {
 				r := images.Kernel{ImagePath: c.String("image")}
@@ -88,11 +89,12 @@ func main() {
 		},
 
 		{
-			Name:  "bootimg",
-			Usage: "parse the bootimg",
+			Name:    "bootimg",
+			Aliases: []string{"b"},
+			Usage:   "parse and extract android bootimg",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "image", Value: "", Usage: "boot image file"},
-				cli.BoolFlag{Name: "extract", Usage: "extract file"},
+				cli.BoolFlag{Name: "extract", Usage: "extract bootimage"},
 			},
 			Action: func(c *cli.Context) error {
 				b := images.Bootimg{ImagePath: c.String("image")}
@@ -113,7 +115,9 @@ func main() {
 		},
 
 		{
-			Name: "dtb",
+			Name:    "dtb",
+			Aliases: []string{"d"},
+			Usage:   "dump dtb header and decompile dtb",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "image", Value: "", Usage: "dtb image file"},
 				cli.BoolFlag{Name: "hdr", Usage: "dump hdr info"},
