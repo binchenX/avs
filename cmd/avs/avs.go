@@ -64,7 +64,7 @@ func main() {
 		{
 			Name:    "update",
 			Aliases: []string{"u"},
-			Usage:   "update the device config",
+			Usage:   "re-generate Android mk with updated device config",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "dir", Value: "", Usage: "dir for update, default is current dir"},
 			},
@@ -80,7 +80,7 @@ func main() {
 		{
 			Name:    "clean",
 			Aliases: []string{"c"},
-			Usage:   "clean up all the geneated files",
+			Usage:   "delete all the generated files",
 			Flags: []cli.Flag{
 				cli.StringFlag{Name: "dir", Value: "", Usage: "dir for cleanup, default is current dir"},
 			},
