@@ -73,12 +73,31 @@ Catch error in seconds not hours later.
 ## Get started
 
 ```bash
-    #go get github.com/pierrchen/avs
-    #avs i  --vendor v --device d
-    #cd v/d # modify the config.json 
-    #avs u  # update the configration
+    $go get github.com/pierrchen/avs
+    $avs i  --vendor v --device d
+    $cd v/d # modify the config.json 
+    $avs u  # update the configration
 ```
-For more, use `avs --help`.
+For more, see `avs -h`.
+
+```
+$ avs -h 
+NAME:
+   avs - Andoid build specification cli
+
+USAGE:
+   avs [global options] command [command options] [arguments...]
+
+VERSION:
+   0.0.1
+
+COMMANDS:
+     init, i      init device config: avs s --vendor v --device d
+     validate, v  validate device config
+     update, u    update the device config
+     clean, c     clean up all the geneated files
+     help, h      Shows a list of commands or help for one command
+```
 
 ## AVS In Action
 
