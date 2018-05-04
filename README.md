@@ -1,4 +1,4 @@
-# Android Vendor Build Specification
+# AVS - create Android device easier and faster
 
 [![GoDoc](https://godoc.org/github.com/pierrchen/avs?status.svg)](https://godoc.org/github.com/pierrchen/avs)
 
@@ -82,4 +82,4 @@ For more, use `avs --help`.
 
 ## AVS In Action
 
-[Poplar Device](https://github.com/96boards-poplar/poplar-device) is created from [this config](https://github.com/pierrchen/avs/blob/master/configs/poplar.json) file.
+[Poplar Device](https://github.com/96boards-poplar/poplar-device) is created from [this configs](https://github.com/pierrchen/avs/tree/master/devices/poplar).
