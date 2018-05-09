@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/pierrchen/avs/spec"
@@ -87,9 +88,9 @@ func generateAll(spec *spec.Spec, genDir string) error {
 	addProductSpecificFileMapping(spec)
 
 	// before generating, sort the hal spec by name
-	// sort.Slice(spec.Hals, func(i, j int) bool {
-	// 	return spec.Hals[i].Name < spec.Hals[j].Name
-	// })
+	sort.Slice(spec.Hals, func(i, j int) bool {
+		return spec.Hals[i].Name < spec.Hals[j].Name
+	})
 
 	for file, tmpl := range tmlMap {
 		path := filepath.Join(genDir, file)
