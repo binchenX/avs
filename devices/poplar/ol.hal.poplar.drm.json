@@ -36,5 +36,19 @@
                 }
             ]
         }
+    ],
+    "devs": [
+        {
+            "node": "/dev/tee0",
+            "mode": "0666",
+            "uid": "shell",
+            "guid": "shell"
+        },
+        {
+            "node": "/dev/teepriv0",
+            "mode": "0666",
+            "uid": "shell",
+            "guid": "shell"
+        }
     ]
 }
