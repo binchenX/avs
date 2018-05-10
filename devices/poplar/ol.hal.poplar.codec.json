@@ -158,6 +158,24 @@
             "mode": "0666",
             "uid": "system",
             "guid": "audio"
+        },
+        {
+            "node": "/dev/hi_mem",
+            "mode": "0666",
+            "uid": "system",
+            "guid": "mediadrm"
+        },
+        {
+            "node": "/dev/hi_omxvdec",
+            "mode": "0666",
+            "uid": "system",
+            "guid": "mediadrm"
+        },
+        {
+            "node": "/dev/hi_vfmw",
+            "mode": "0666",
+            "uid": "system",
+            "guid": "mediadrm"
         }
     ]
 }
