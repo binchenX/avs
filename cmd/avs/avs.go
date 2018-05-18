@@ -13,7 +13,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "avs"
-	app.Version = "0.0.1"
+	app.Version = "1.0"
 	app.Usage = "Andoid build specification cli"
 	app.Action = func(c *cli.Context) error {
 		fmt.Println("Please use avs subcommands, see avs -h")
