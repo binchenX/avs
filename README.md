@@ -70,34 +70,27 @@ Catch error in seconds not hours later.
 
   For example, you can have one file called `hal.wifi.overlay` which contains all the configurations needed for wifi. Drop that in the device directory, and do `avs update`, it will either add (when there is no wifi config in config.json) or override (when there is a wifi in the config.json) the wifi configration. It is much manageable than having multiple `mk` files and struggle with where to put what.
 
-## Get started
+## Download
+
+### Binary
+
+[v1.0](https://github.com/pierrchen/avs/releases/download/v1.0/avs)
+
+### Go get
 
 ```bash
-    $go get github.com/pierrchen/avs
-    $avs i  --vendor v --device d
-    $cd v/d # modify the config.json 
-    $avs u  # update the configration
+$go get github.com/pierrchen/avs
 ```
-For more, see `avs -h`.
-
+To get started:
 ```
-$ avs -h 
-NAME:
-   avs - Andoid build specification cli
-
-USAGE:
-   avs [global options] command [command options] [arguments...]
-
-VERSION:
-   0.0.1
-
-COMMANDS:
-     init, i      init device config: avs s --vendor v --device d
-     validate, v  validate device config
-     update, u    update the device config
-     clean, c     clean up all the geneated files
-     help, h      Shows a list of commands or help for one command
+  $cd ${ANDROID_BUILD_TOP}/device
+  $avs init  --vendor linaro --device awesome
+  $cd linaro/awesome
+  # modify the default config.json
+  $avs udpate
 ```
+
+see `avs -h`.
 
 ## AVS In Action
 
