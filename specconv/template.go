@@ -267,10 +267,11 @@ func InstsallDriver(src string) string {
 	return src + ":" + defaultKernelModuleDst + "/" + filepath.Base(src)
 }
 
-// f - generated output file
-// templateFile - template
-// spec - spec
-func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err error) {
+func executeTemplate2(f *os.File, tmpName string, tmpContent string, spec *spec.Spec) (err error) {
+	return nil
+}
+
+func executeTemplate(out *os.File, tmpName string, tmpContent string, spec *spec.Spec) (err error) {
 	funcMap := template.FuncMap{
 		"ToUpper":                   strings.ToUpper,
 		"FeatureFileSrcDir":         getFeatureFileSrcDir,
@@ -289,15 +290,14 @@ func executeTemplate(f *os.File, templateFile string, spec *spec.Spec) (err erro
 		"InstsallFirmware":          InstsallFirmware,
 		"InstsallDriver":            InstsallDriver,
 	}
-	tmpFile := filepath.Join(avsInstallDir, "tmpl", templateFile)
 
-	tmpl, err := template.New(templateFile).Funcs(funcMap).ParseFiles(tmpFile)
+	tmpl, err := template.New(tmpName).Funcs(funcMap).Parse(string(tmpContent))
 	if err != nil {
-		fmt.Println("create template failed", tmpFile, err)
+		fmt.Println("create template failed", tmpName, err)
 		return err
 	}
 
-	return generate(tmpl, f, spec)
+	return generate(tmpl, out, spec)
 }
 
 // executeTemplateForRc genereate Rcscript only

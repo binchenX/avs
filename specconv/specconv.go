@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/pierrchen/avs/spec"
+	"github.com/pierrchen/avs/tmpl"
 	"github.com/pierrchen/avs/utils"
 	"github.com/pierrchen/avs/vdts"
 )
@@ -101,12 +102,42 @@ func generateAll(spec *spec.Spec, genDir string) error {
 		}
 		defer outFile.Close()
 
-		executeTemplate(outFile, tmpl, spec)
+		tmpString, err := getContentForTempate(tmpl)
+		if err != nil {
+			log.Printf("faild to get template content for %s\n", tmpl)
+			return err
+		}
+		executeTemplate(outFile, tmpl, tmpString, spec)
 		avsstate.GenereatedFiles = append(avsstate.GenereatedFiles, outFile.Name())
 	}
 
 	generateRcScripts(spec, genDir)
 	return nil
+}
+
+func getContentForTempate(template string) (string, error) {
+	var m = map[string]string{
+		tplVendorSetup:    tmpl.Vendorsetup,
+		tplAndriodProduct: tmpl.Androidproducts,
+		tplBoard:          tmpl.Boardconfig,
+		tplDevice:         tmpl.Device,
+		tplManifest:       tmpl.Manifest,
+		tplProduct:        tmpl.Product,
+		tplUevent:         tmpl.Uevent,
+		tplFstab:          tmpl.Fstab,
+		tplUsbRc:          tmpl.Usb,
+		tplInitRc:         tmpl.Initrc,
+	}
+
+	return m[template], nil
+	// file template
+	// tmpFile := filepath.Join(avsInstallDir, "tmpl", template)
+	// tmpString, err := ioutil.ReadFile(tmpFile)
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// return string(tmpString), nil
 }
 
 func generateRcScripts(s *spec.Spec, genDir string) error {
