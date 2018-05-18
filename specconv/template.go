@@ -8,6 +8,7 @@ import (
 	"text/template"
 
 	"github.com/pierrchen/avs/spec"
+	"github.com/pierrchen/avs/tmpl"
 	"github.com/pierrchen/avs/utils"
 )
 
@@ -303,11 +304,10 @@ func executeTemplate(out *os.File, tmpName string, tmpContent string, spec *spec
 // executeTemplateForRc genereate Rcscript only
 func executeTemplateForRc(f *os.File, rc *spec.RcScripts) (err error) {
 	funcMap := template.FuncMap{}
-	tmpFile := filepath.Join(avsInstallDir, "tmpl", tplInitRc)
 
-	tmpl, err := template.New(tplInitRc).Funcs(funcMap).ParseFiles(tmpFile)
+	tmpl, err := template.New(tplInitRc).Funcs(funcMap).Parse(tmpl.Initrc)
 	if err != nil {
-		fmt.Println("rcScript template failed", tmpFile, err)
+		fmt.Println("rcScript template failed", tplInitRc, err)
 		return err
 	}
 
