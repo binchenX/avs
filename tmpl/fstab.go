@@ -1,6 +1,6 @@
 package tmpl
 
-// Vendorsetup is the template for vendorsetup.mk
+// Fstab is the template for fstab.$(product)
 const Fstab = `{{with .BootImage.Rootfs.Fstab}}
 
 {{- range .Mounts }}

@@ -1,6 +1,6 @@
 package tmpl
 
-// Vendorsetup is the template for vendorsetup.mk
+// Initrc is the template for x.rc file
 const Initrc = `
 {{- range .Imports -}}
 import {{.}}
@@ -19,4 +19,5 @@ service {{.Name}} {{.Path}} {{.Args}}
    {{- range .Options}}
     {{.}}
    {{- end }}
-{{- end }}`
+{{- end }}
+`

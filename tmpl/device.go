@@ -1,6 +1,6 @@
 package tmpl
 
-// Device is the template for vendorsetup.mk
+// Device is the template for device.mk
 const Device = `# 1. bootimage
 # 1.1 kernel and dtb
 LOCAL_KERNEL := {{ .BootImage.Kernel.LocalKernel}}

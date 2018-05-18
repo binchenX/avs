@@ -1,6 +1,6 @@
 package tmpl
 
-// Vendorsetup is the template for vendorsetup.mk
+// Usb is the template for init.$(product).usb.rc
 const Usb = `
 {{- with .BoardConfig -}}
 on boot
