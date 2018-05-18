@@ -90,5 +90,5 @@ func getDefaultConfigFile() string {
 
 // TODO:be able to select diffent type of scaffolding, say arm64, qemu, full
 func loadTemplateSpec() (*spec.Spec, error) {
-	return LoadSpec(filepath.Join(GetAvsInstallDir(), getDefaultConfigFile()))
+	return LoadSpecFromString(DefaultSpec)
 }
