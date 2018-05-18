@@ -95,9 +95,15 @@ func generateAll(spec *spec.Spec, genDir string) error {
 
 	for file, tmpl := range tmlMap {
 		path := filepath.Join(genDir, file)
+		// we might need to create subdirectory under the genDir
+		err := os.MkdirAll(filepath.Dir(path), 0775)
+		if err != nil {
+			log.Printf("err: %s when create dir %s\n", filepath.Dir(path), err)
+			return err
+		}
 		outFile, err := os.Create(path)
 		if err != nil {
-			log.Printf("faild to create %s\n", path)
+			log.Printf("err: %s faild to create %s\n", path, err)
 			return err
 		}
 		defer outFile.Close()
