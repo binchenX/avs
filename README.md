@@ -3,6 +3,10 @@
 [![GoDoc](https://godoc.org/github.com/pierrchen/avs?status.svg)](https://godoc.org/github.com/pierrchen/avs)
 
 
+## User of AVS
+
+[Poplar Device in AOSP](https://android.googlesource.com/device/linaro/poplar) is created from [this config](https://github.com/pierrchen/avs/tree/master/devices/poplar).
+
 ## The Problems 
 
 There are two major problems nowadays when trying to building an Android Devices.
@@ -92,6 +96,3 @@ To get started:
 
 see `avs -h`.
 
-## AVS In Action
-
-[Poplar Device](https://github.com/96boards-poplar/poplar-device) is created from [this configs](https://github.com/pierrchen/avs/tree/master/devices/poplar).
